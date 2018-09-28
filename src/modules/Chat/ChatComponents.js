@@ -19,17 +19,22 @@ export const LogoutMenu = props => (
   </Menu>
 );
 
-export const ChatContainer = styled.article`
+export const ChatContainer = styled.ul`
   display: flex;
   flex: 1;
-  overflow-y: scroll;
+  overflow-y: auto;
   flex-direction: column;
   padding: 10px 5%;
   background-color: ${props => props.theme.colors.LIGHT_GREY};
   position: relative;
+
+  .messagesEnd {
+    display: flex;
+    min-height: 5px;
+  }
 `;
 
-export const ChatLine = styled.div`
+export const ChatLine = styled.li`
   position: relative;
   align-self: ${props => (props.ownUser ? 'flex-end' : 'flex-start')};
   padding: 6px 7px 8px 9px;
@@ -87,6 +92,8 @@ export const Wrapper = styled.div`
   justify-content: space-between;
   width: 100%;
   height: 100%;
+  background-color: ${props => props.theme.colors.LIGHT_GREY};
+  
 `;
 
 export const OuterWrapper = styled.div`

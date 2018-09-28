@@ -99,7 +99,7 @@ class Home extends React.PureComponent<Props> {
                   <CircularProgress />
                 </LoaderContainer>
               )}
-              <div name="messagesEnd" />
+              <div className="messagesEnd" name="messagesEnd" />
             </ChatContainer>
             <ChatInputForm onSubmit={this.sendMessage} />
           </Wrapper>
