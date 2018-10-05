@@ -55,6 +55,7 @@ export type ChatStateType = {
  ******************************************/
 export type AppStateType = {
   appInitialized: boolean,
+  isAccountVerified: boolean,
   loaders: AppLoader[],
 };
 

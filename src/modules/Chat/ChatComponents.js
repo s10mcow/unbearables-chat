@@ -24,7 +24,7 @@ export const ChatContainer = styled.ul`
   flex: 1;
   overflow-y: auto;
   flex-direction: column;
-  padding: 10px 5%;
+  padding: 10px 5% 0;
   background-color: ${props => props.theme.colors.LIGHT_GREY};
   position: relative;
 

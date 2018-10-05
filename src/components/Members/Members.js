@@ -29,12 +29,15 @@ type State = {
 };
 
 class _Members extends React.PureComponent<Props, State> {
-  state = {
-    memberPanelOpen: !isMobileDevice(),
-    selectedUser: {},
-    type: 'Profile',
-    isAvatarOpen: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      memberPanelOpen: !isMobileDevice(),
+      selectedUser: props.user,
+      type: 'Profile',
+      isAvatarOpen: false,
+    };
+  }
 
   openProfile = (user, type) => {
     this.setState({
@@ -57,6 +60,7 @@ class _Members extends React.PureComponent<Props, State> {
 
   render() {
     const { members, user } = this.props;
+
     return (
       <MemberContainer isOpen={this.state.memberPanelOpen}>
         <Bearatar

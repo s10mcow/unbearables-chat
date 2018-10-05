@@ -11,6 +11,7 @@ import getStoreAndPersistor, { history } from './store/store';
 import theme from './styles/1-settings/theme';
 import AppStartup from './modules/AppStartup/AppStartup';
 import AppReadyWaiter from './modules/AppReadyWaiter/AppReadyWaiter';
+import VerifyEmailModal from './components/VerifyEmailModal/VerifyEmailModal';
 
 const { store, persistor } = getStoreAndPersistor();
 
@@ -21,6 +22,7 @@ const Application = () => {
       <ThemeProvider theme={theme}>
         <PersistGate loading="loading..." persistor={persistor}>
           <AppStartup />
+          <VerifyEmailModal />
           <ConnectedRouter history={history}>
             <AppReadyWaiter>
               <Routes />

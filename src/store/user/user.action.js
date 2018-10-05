@@ -9,11 +9,21 @@ export const USER_LOGOUT_SUCCESS = 'USER_LOGOUT_SUCCESS';
 export const USER_SIGNUP_FAILURE = 'USER_SIGNUP_FAILURE';
 export const USER_UPDATE_INFO = 'USER_UPDATE_INFO';
 export const USER_UPDATE_LAST_SEEN = 'USER_UPDATE_LAST_SEEN';
+export const USER_LOGIN_STARTED = 'USER_LOGIN_STARTED';
+export const USER_SIGNUP_STARTED = 'USER_SIGNUP_STARTED';
 
 const userLogin = (email: string, password: string) => ({
   type: USER_LOGIN,
   email,
   password,
+});
+
+const userLoginStarted = () => ({
+  type: USER_LOGIN_STARTED,
+});
+
+const userSignupStarted = () => ({
+  type: USER_SIGNUP_STARTED,
 });
 
 const userLoginSuccess = (user: UserObjectType) => ({
@@ -65,6 +75,8 @@ const user = {
   userSignupFailure,
   userUpdateInfo,
   userUpdateLastSeen,
+  userLoginStarted,
+  userSignupStarted,
 };
 
 export default user;

@@ -19,6 +19,7 @@ import { getUserData } from './user.reducer';
 
 function* userLogin({ email, password }): Saga<void> {
   try {
+    yield put(actions.userLoginStarted());
     const data = yield call(
       rsf.auth.signInWithEmailAndPassword,
       email,
@@ -36,6 +37,7 @@ function* userLogin({ email, password }): Saga<void> {
 
 function* userSignup({ username, email, password }): Saga<void> {
   try {
+    yield put(actions.userSignupStarted());
     const data = yield call(
       rsf.auth.createUserWithEmailAndPassword,
       email,
@@ -44,6 +46,9 @@ function* userSignup({ username, email, password }): Saga<void> {
     yield call([data.user, data.user.updateProfile], {
       displayName: username,
     });
+    yield put(actions.userLoginSuccess(data.user));
+    yield put(chatActions.initialize());
+    yield put(push('/chat'));
   } catch (error) {
     yield put(
       errorActions.errorSignupFailure('Something seems to have gone wrong...')

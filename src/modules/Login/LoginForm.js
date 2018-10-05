@@ -6,9 +6,11 @@ import { reduxForm } from 'redux-form';
 import Input from 'src/components/Input/Input';
 import Button from '@material-ui/core/Button';
 import styled from 'styled-components';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 type OwnProps = {
   handleSubmit: Function,
+  isLoggingIn: boolean,
 };
 
 const FormWrapper = styled.form`
@@ -17,8 +19,15 @@ const FormWrapper = styled.form`
   flex-direction: column;
 `;
 
+const LoaderContainer = styled.div`
+  display: flex;
+  flex: 1;
+  justify-content: center;
+`;
+
 class LoginForm extends React.PureComponent<OwnProps> {
   render() {
+    const { isLoggingIn } = this.props;
     return (
       <FormWrapper onSubmit={this.props.handleSubmit}>
         <Input
@@ -34,7 +43,13 @@ class LoginForm extends React.PureComponent<OwnProps> {
           required
         />
         <Button color="primary" variant="contained" size="large" type="submit">
-          Login
+          {isLoggingIn ? (
+            <LoaderContainer>
+              <CircularProgress size={20} color="secondary" />
+            </LoaderContainer>
+          ) : (
+            'Login'
+          )}
         </Button>
       </FormWrapper>
     );

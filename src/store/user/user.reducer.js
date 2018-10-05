@@ -3,6 +3,8 @@ import type { UserStateType, AppStoreType } from '../../types';
 import {
   USER_LOGIN_SUCCESS,
   USER_LOGOUT_SUCCESS,
+  USER_LOGIN_STARTED,
+  USER_SIGNUP_STARTED,
   type AnyUserActionType,
 } from './user.action';
 
@@ -14,6 +16,8 @@ const initialState: UserStateType = {
     lastSeen: null,
     email: '',
   },
+  isLoggingIn: false,
+  isSigningUp: false,
 };
 
 const userReducer = (
@@ -21,10 +25,23 @@ const userReducer = (
   action: AnyUserActionType
 ): UserStateType => {
   switch (action.type) {
+    case USER_LOGIN_STARTED:
+      return {
+        ...state,
+        isLoggingIn: true,
+      };
     case USER_LOGIN_SUCCESS:
       return {
         ...state,
         user: action.user,
+        isLoggingIn: false,
+        isSigningUp: false,
+      };
+
+    case USER_SIGNUP_STARTED:
+      return {
+        ...state,
+        isSigningUp: true,
       };
 
     case USER_LOGOUT_SUCCESS:
@@ -42,3 +59,7 @@ export const getUserData = (state: AppStoreType) =>
 export const userIsLoggedIn = (state: AppStoreType) =>
   state && state.user && state.user.user && state.user.user.email;
 export default userReducer;
+export const isLoggingIn = (state: AppStoreType) =>
+  state && state.user && state.user.isLoggingIn;
+export const isSigningUp = (state: AppStoreType) =>
+  state && state.user && state.user.isSigningUp;

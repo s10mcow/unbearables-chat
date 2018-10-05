@@ -7,6 +7,7 @@ import Input from 'src/components/Input/Input';
 import Button from '@material-ui/core/Button';
 import styled from 'styled-components';
 import { MdSend } from 'react-icons/md';
+import { AppIsReadOnly } from 'src/store/app/app.reducer';
 type OwnProps = {
   handleSubmit: Function,
 };
@@ -25,15 +26,21 @@ const FormWrapper = styled.form`
 
 class ChatInputForm extends React.PureComponent<OwnProps> {
   render() {
+    const { isReadOnly } = this.props;
     return (
       <FormWrapper onSubmit={this.props.handleSubmit}>
         <Input
+          disabled={isReadOnly}
           fullWidth
           name="message"
           type="text"
-          placeholder="Say something!"
+          placeholder={
+            isReadOnly
+              ? 'Verify your email to get in the bear cave.'
+              : 'Say something!'
+          }
         />
-        <Button type="submit">
+        <Button type="submit" disabled={isReadOnly}>
           <MdSend />
         </Button>
       </FormWrapper>
@@ -41,7 +48,11 @@ class ChatInputForm extends React.PureComponent<OwnProps> {
   }
 }
 
+const mapStateToProps = state => ({
+  isReadOnly: AppIsReadOnly(state),
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   null
 )(reduxForm({ form: 'chatInputForm' })(ChatInputForm));

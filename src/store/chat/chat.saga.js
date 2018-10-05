@@ -9,6 +9,7 @@ import userActions from '../user/user.action';
 import { getUserData } from '../user/user.reducer';
 import { reset } from 'redux-form';
 import { push } from 'connected-react-router';
+import { AppIsReadOnly } from '../app/app.reducer';
 
 export const contentPath = 'live-chat/content/';
 export const memberPath = 'live-chat/members/';
@@ -126,6 +127,10 @@ function* contentAdd() {
 
 function* chatSendMessage(action) {
   try {
+    const isReadOnly = yield select(AppIsReadOnly);
+    if (isReadOnly) {
+      return;
+    }
     const user = yield select(getUserData);
     const ref = rsf.app
       .database()
@@ -147,8 +152,12 @@ function* chatSendMessage(action) {
 
 function* chatLogout() {
   try {
-    yield call(contentChannel.close);
-    yield call(memberChannel.close);
+    if (contentChannel) {
+      yield call(contentChannel.close);
+    }
+    if (memberChannel) {
+      yield call(memberChannel.close);
+    }
     yield put(actions.chatReset());
   } catch (e) {
     console.error(e);

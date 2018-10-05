@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import actions from 'src/store/user/user.action';
+import { isLoggingIn, isSigningUp } from 'src/store/user/user.reducer';
 import LoginForm from './LoginForm';
 import SignupForm from './SignupForm';
 import Card from '@material-ui/core/Card';
@@ -41,7 +42,7 @@ class Login extends React.PureComponent<OwnProps, State> {
   };
 
   render() {
-    const { error } = this.props;
+    const { error, isLoggingIn, isSigningUp } = this.props;
 
     return (
       <article>
@@ -55,7 +56,7 @@ class Login extends React.PureComponent<OwnProps, State> {
               <Card className="Card">
                 <CardHeader title="Login" />
                 <CardContent>
-                  <LoginForm onSubmit={this.login} />
+                  <LoginForm onSubmit={this.login} isLoggingIn={isLoggingIn} />
                   <Error>{error.loginError}</Error>
                   <Button onClick={() => this.setState({ showLogin: false })}>
                     Goto Signup
@@ -70,7 +71,10 @@ class Login extends React.PureComponent<OwnProps, State> {
               <Card className="Card">
                 <CardHeader title="Signup" />
                 <CardContent>
-                  <SignupForm onSubmit={this.signup} />
+                  <SignupForm
+                    onSubmit={this.signup}
+                    isSigningUp={isSigningUp}
+                  />
                   <Error>{error.signupError}</Error>
                   <Button onClick={() => this.setState({ showLogin: true })}>
                     Goto Login
@@ -98,6 +102,8 @@ const mapDispatchToProps = dispatch =>
 const mapStateToProps = state => ({
   user: state && state.user,
   error: getError(state),
+  isLoggingIn: isLoggingIn(state),
+  isSigningUp: isSigningUp(state),
 });
 
 export default connect(
