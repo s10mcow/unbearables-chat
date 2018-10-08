@@ -1,6 +1,7 @@
 // @flow
 import { put, takeLatest, call } from 'redux-saga/effects';
 import { APP_LOADERS } from '../../constants';
+import { delay } from 'redux-saga';
 import actions, {
   APP_INIT,
   APP_RESEND_VERIFY,
@@ -15,11 +16,11 @@ import rsf from '../rsf';
 function* appInitWorker(): Saga<void> {
   yield put(actions.addLoader(APP_LOADERS.appInit));
   //Do init stuff here
-  const auth = rsf.app.auth();
   let isAccountVerified = false;
-
-  if (auth.currentUser) {
-    const { uid, displayName, email, emailVerified } = auth.currentUser;
+  yield delay(1000);
+  const { currentUser } = rsf.app.auth();
+  if (currentUser) {
+    const { uid, displayName, email, emailVerified } = currentUser;
     const user = {
       uid,
       displayName,
@@ -28,11 +29,11 @@ function* appInitWorker(): Saga<void> {
       email,
     };
     isAccountVerified = emailVerified;
-    if (isAccountVerified) {
-      yield put(userActions.userLoginSuccess(user));
-      yield put(chatActions.initialize());
-    }
+    yield put(userActions.userLoginSuccess(user));
+    yield put(userActions.userStartSync());
+    yield put(chatActions.initialize());
   } else {
+    yield put(userActions.userLogout());
     yield put(push('/login'));
   }
   yield put(actions.setAppStatusInitialized(isAccountVerified));

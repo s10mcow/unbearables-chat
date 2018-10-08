@@ -11,6 +11,8 @@ export const USER_UPDATE_INFO = 'USER_UPDATE_INFO';
 export const USER_UPDATE_LAST_SEEN = 'USER_UPDATE_LAST_SEEN';
 export const USER_LOGIN_STARTED = 'USER_LOGIN_STARTED';
 export const USER_SIGNUP_STARTED = 'USER_SIGNUP_STARTED';
+export const USER_UPDATE = 'USER_UPDATE';
+export const USER_START_SYNC = 'USER_START_SYNC';
 
 const userLogin = (email: string, password: string) => ({
   type: USER_LOGIN,
@@ -61,6 +63,15 @@ const userUpdateInfo = (username: string) => ({
   username,
 });
 
+const userStartSync = () => ({
+  type: USER_START_SYNC,
+});
+
+const userUpdate = (user: UserObjectType) => ({
+  type: USER_UPDATE,
+  user,
+});
+
 const userUpdateLastSeen = () => ({
   type: USER_UPDATE_LAST_SEEN,
 });
@@ -77,6 +88,8 @@ const user = {
   userUpdateLastSeen,
   userLoginStarted,
   userSignupStarted,
+  userUpdate,
+  userStartSync,
 };
 
 export default user;

@@ -1,5 +1,5 @@
 // @flow
-import { put, takeLatest, call, select } from 'redux-saga/effects';
+import { put, takeLatest, call, select, take } from 'redux-saga/effects';
 import type { Saga } from 'redux-saga';
 import { push } from 'connected-react-router';
 
@@ -10,12 +10,25 @@ import {
   USER_LOGOUT,
   USER_UPDATE_INFO,
   USER_UPDATE_LAST_SEEN,
+  USER_START_SYNC,
 } from './user.action';
 import actions from './user.action';
 import chatActions from '../chat/chat.action';
 import errorActions from '../error/error.action';
 import { memberPath } from '../chat/chat.saga';
 import { getUserData } from './user.reducer';
+
+function* userSync() {
+  const channel = yield call(rsf.auth.channel);
+
+  while (true) {
+    const { user } = yield take(channel);
+    if (user) yield put(actions.userUpdate(user));
+    else {
+      //console.log(error);
+    }
+  }
+}
 
 function* userLogin({ email, password }): Saga<void> {
   try {
@@ -118,6 +131,10 @@ export function* watchUserSignup(): Saga<void> {
 
 export function* watchUserLogin(): Saga<void> {
   yield takeLatest(USER_LOGIN, userLogin);
+}
+
+export function* watchUserStartSync(): Saga<void> {
+  yield takeLatest(USER_START_SYNC, userSync);
 }
 
 export default [

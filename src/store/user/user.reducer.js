@@ -6,6 +6,7 @@ import {
   USER_LOGIN_STARTED,
   USER_SIGNUP_STARTED,
   type AnyUserActionType,
+  USER_UPDATE,
 } from './user.action';
 
 const initialState: UserStateType = {
@@ -19,6 +20,8 @@ const initialState: UserStateType = {
   isLoggingIn: false,
   isSigningUp: false,
 };
+
+const getUserUpdate = (user, state) => state.user;
 
 const userReducer = (
   state: UserStateType = initialState,
@@ -42,6 +45,12 @@ const userReducer = (
       return {
         ...state,
         isSigningUp: true,
+      };
+
+    case USER_UPDATE:
+      return {
+        ...state,
+        user: getUserUpdate(action.user, state),
       };
 
     case USER_LOGOUT_SUCCESS:
