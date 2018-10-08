@@ -4,12 +4,14 @@ import {
   ERROR_LOGIN_FAILURE,
   ERROR_SIGNUP_FAILURE,
   ERROR_RESET,
+  ERROR_RESET_PASSWORD_FAILURE,
   type AnyErrorActionType,
 } from './error.action';
 
 const initialState: ErrorStateType = {
   loginError: '',
   signupError: '',
+  resetPasswordError: '',
 };
 
 const errorReducer = (
@@ -30,6 +32,11 @@ const errorReducer = (
     case ERROR_RESET:
       return {
         ...initialState,
+      };
+    case ERROR_RESET_PASSWORD_FAILURE:
+      return {
+        ...initialState,
+        resetPasswordError: action.message,
       };
     default:
       return state;

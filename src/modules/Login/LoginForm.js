@@ -3,7 +3,7 @@ import React from 'react';
 // import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
-import Input from 'src/components/Input/Input';
+import Input from '../../components/Input/Input';
 import Button from '@material-ui/core/Button';
 import styled from 'styled-components';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -27,9 +27,9 @@ const LoaderContainer = styled.div`
 
 class LoginForm extends React.PureComponent<OwnProps> {
   render() {
-    const { isLoggingIn } = this.props;
+    const { isLoggingIn, handleSubmit } = this.props;
     return (
-      <FormWrapper onSubmit={this.props.handleSubmit}>
+      <FormWrapper onSubmit={handleSubmit}>
         <Input
           name="username"
           type="text"

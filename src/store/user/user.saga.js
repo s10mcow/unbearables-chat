@@ -11,6 +11,7 @@ import {
   USER_UPDATE_INFO,
   USER_UPDATE_LAST_SEEN,
   USER_START_SYNC,
+  USER_RESET_PASSWORD,
 } from './user.action';
 import actions from './user.action';
 import chatActions from '../chat/chat.action';
@@ -113,6 +114,20 @@ function* userUpdateLastSeen() {
     console.error(e);
   }
 }
+
+function* userResetPassword({ email }) {
+  try {
+    yield call(rsf.auth.sendPasswordResetEmail, email);
+    yield put(push('/login'));
+  } catch (error) {
+    yield put(
+      errorActions.errorResetPasswordFailure(
+        'Something seems to have gone wrong...'
+      )
+    );
+  }
+}
+
 export function* watchUserUpdateLastSeen(): Saga<void> {
   yield takeLatest(USER_UPDATE_LAST_SEEN, userUpdateLastSeen);
 }
@@ -137,10 +152,15 @@ export function* watchUserStartSync(): Saga<void> {
   yield takeLatest(USER_START_SYNC, userSync);
 }
 
+export function* watchUserResetPassword(): Saga<void> {
+  yield takeLatest(USER_RESET_PASSWORD, userResetPassword);
+}
+
 export default [
   watchUserLogin,
   watchUserSignup,
   watchUserLogout,
   watchUserUpdateInfo,
   watchUserUpdateLastSeen,
+  watchUserResetPassword,
 ];

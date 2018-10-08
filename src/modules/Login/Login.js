@@ -14,6 +14,7 @@ import Button from '@material-ui/core/Button';
 import { type UserObjectType, type ErrorStateType } from 'src/types';
 import { Wrapper, Container, Error } from './LoginComponents';
 import { getError } from 'src/store/error/error.reducer';
+import { withRouter } from 'react-router';
 
 type OwnProps = {
   userLogin: Function,
@@ -31,6 +32,7 @@ class Login extends React.PureComponent<OwnProps, State> {
 
   state = {
     showLogin: true,
+    resetPassword: false,
   };
 
   login = ({ username, password }) => {
@@ -42,7 +44,7 @@ class Login extends React.PureComponent<OwnProps, State> {
   };
 
   render() {
-    const { error, isLoggingIn, isSigningUp } = this.props;
+    const { error, isLoggingIn, isSigningUp, history } = this.props;
 
     return (
       <article>
@@ -60,6 +62,9 @@ class Login extends React.PureComponent<OwnProps, State> {
                   <Error>{error.loginError}</Error>
                   <Button onClick={() => this.setState({ showLogin: false })}>
                     Goto Signup
+                  </Button>
+                  <Button onClick={() => history.push('/resetpassword')}>
+                    Forgot Password
                   </Button>
                 </CardContent>
               </Card>
@@ -106,7 +111,9 @@ const mapStateToProps = state => ({
   isSigningUp: isSigningUp(state),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Login);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Login)
+);
