@@ -24,7 +24,8 @@ import {
 } from './ChatComponents';
 import distanceInWords from 'date-fns/distance_in_words';
 
-const clean = input => input && decorateOutput(sanitizeInput(input));
+const clean = (input, user) =>
+  input && decorateOutput(sanitizeInput(input), user.toLowerCase());
 
 type Props = {
   logout: Function,
@@ -65,6 +66,7 @@ class Home extends React.PureComponent<Props> {
 
   render() {
     const { user, chat } = this.props;
+
     return (
       <OuterWrapper>
         <Helmet>
