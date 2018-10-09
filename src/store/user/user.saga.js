@@ -2,7 +2,7 @@
 import { put, takeLatest, call, select, take } from 'redux-saga/effects';
 import type { Saga } from 'redux-saga';
 import { push } from 'connected-react-router';
-
+import appActions from '../app/app.action';
 import rsf from '../rsf';
 import {
   USER_LOGIN,
@@ -34,12 +34,13 @@ function* userSync() {
 function* userLogin({ email, password }): Saga<void> {
   try {
     yield put(actions.userLoginStarted());
-    const data = yield call(
+    const { user } = yield call(
       rsf.auth.signInWithEmailAndPassword,
       email,
       password
     );
-    yield put(actions.userLoginSuccess(data.user));
+    yield put(actions.userLoginSuccess(user));
+    yield put(appActions.setAppStatusInitialized(user.emailVerified));
     yield put(chatActions.initialize());
     yield put(push('/chat'));
   } catch (error) {

@@ -29,6 +29,7 @@ function* appInitWorker(): Saga<void> {
       email,
     };
     isAccountVerified = emailVerified;
+
     yield put(userActions.userLoginSuccess(user));
     yield put(userActions.userStartSync());
     yield put(chatActions.initialize());
