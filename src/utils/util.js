@@ -1,5 +1,6 @@
 const urlNonRelativePathRegex = /\/\/.*\./gi;
 const urlFinderRegex = /(?:https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}[^.]\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/gi;
+
 const dirtyToCleanCharacterMap = { '<': '&lt;', '>': '&gt;' };
 const dirtyToCleanRegex = new RegExp(
   Object.keys(dirtyToCleanCharacterMap).join('|'),
@@ -8,8 +9,8 @@ const dirtyToCleanRegex = new RegExp(
 export const sanitizeInput = input =>
   input.replace(dirtyToCleanRegex, match => dirtyToCleanCharacterMap[match]);
 
-export const decorateOutput = output =>
-  output.replace(urlFinderRegex, match => {
+export const decorateOutput = (output, username) => {
+  const anchorizedOutput = output.replace(urlFinderRegex, match => {
     let url = match;
     // Stupid fucking goddamn javascript regex engine bug doesn't work with:
     //if (!urlNonRelativePathRegex.test(match))
@@ -18,8 +19,12 @@ export const decorateOutput = output =>
     if (url.match(urlNonRelativePathRegex) == null) url = '//' + match;
     return '<a target="_blank" href="' + url + '">' + match + '</a>';
   });
+  const userRegex = new RegExp(`@[${username}]`, 'g');
+  const userizedOutput = anchorizedOutput.replace();
 
-export const isMobileDevice = () => (
+  return userizedOutput;
+};
+
+export const isMobileDevice = () =>
   typeof window.orientation !== 'undefined' ||
-    navigator.userAgent.indexOf('IEMobile') !== -1
-);
+  navigator.userAgent.indexOf('IEMobile') !== -1;

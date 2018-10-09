@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { decorateOutput, sanitizeInput } from 'src/utils/util';
 import ChatInputForm from './ChatInputForm';
-import actions from 'src/store/chat/chat.action';
 import userActions from 'src/store/user/user.action';
 import { type UserObjectType } from 'src/types';
 import Members from 'src/components/Members/Members';
@@ -23,6 +22,7 @@ import {
   LoaderContainer,
 } from './ChatComponents';
 import distanceInWords from 'date-fns/distance_in_words';
+
 const clean = input => input && decorateOutput(sanitizeInput(input));
 
 type Props = {
@@ -55,13 +55,6 @@ class Home extends React.PureComponent<Props> {
     this.scrollToBottom();
   }
 
-  sendMessage = data => {
-    const copiedData = Object.assign({}, data);
-    copiedData.message &&
-      copiedData.message.length &&
-      this.props.sendMessage(copiedData.message);
-  };
-
   render() {
     const { user, chat } = this.props;
     return (
@@ -86,7 +79,7 @@ class Home extends React.PureComponent<Props> {
                     )}
                     <span
                       dangerouslySetInnerHTML={{
-                        __html: clean(data.value.content),
+                        __html: clean(data.value.content, user.displayName),
                       }}
                     />
                     <div className="timestamp">
@@ -101,7 +94,7 @@ class Home extends React.PureComponent<Props> {
               )}
               <div className="messagesEnd" name="messagesEnd" />
             </ChatContainer>
-            <ChatInputForm onSubmit={this.sendMessage} />
+            <ChatInputForm />
           </Wrapper>
         </Container>
       </OuterWrapper>
@@ -112,7 +105,6 @@ class Home extends React.PureComponent<Props> {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      sendMessage: message => actions.chatSendMessage(message),
       logout: () => userActions.userLogout(),
     },
     dispatch
