@@ -20,7 +20,11 @@ export const decorateOutput = (output, username) => {
     return '<a target="_blank" href="' + url + '">' + match + '</a>';
   });
   const userRegex = new RegExp(`@[${username}]`, 'g');
-  const userizedOutput = anchorizedOutput.replace();
+
+  const userizedOutput = anchorizedOutput.replace(
+    userRegex,
+    match => `<span className="highlight">${match}</span>`
+  );
 
   return userizedOutput;
 };

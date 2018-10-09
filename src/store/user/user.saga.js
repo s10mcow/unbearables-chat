@@ -24,8 +24,9 @@ function* userSync() {
 
   while (true) {
     const { user } = yield take(channel);
-    if (user) yield put(actions.userUpdate(user));
-    else {
+    if (user) {
+      yield put(actions.userUpdate(user));
+    } else {
       //console.log(error);
     }
   }
@@ -164,4 +165,5 @@ export default [
   watchUserUpdateInfo,
   watchUserUpdateLastSeen,
   watchUserResetPassword,
+  watchUserStartSync,
 ];
