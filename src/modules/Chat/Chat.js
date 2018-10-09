@@ -10,6 +10,7 @@ import { type UserObjectType } from 'src/types';
 import Members from 'src/components/Members/Members';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { scroller } from 'react-scroll';
+import actions from 'src/store/chat/chat.action';
 
 import {
   LogoutMenu,
@@ -55,6 +56,13 @@ class Home extends React.PureComponent<Props> {
     this.scrollToBottom();
   }
 
+  sendMessage = data => {
+    const copiedData = Object.assign({}, data);
+    copiedData.message &&
+      copiedData.message.length &&
+      this.props.sendMessage(copiedData.message);
+  };
+
   render() {
     const { user, chat } = this.props;
     return (
@@ -94,7 +102,7 @@ class Home extends React.PureComponent<Props> {
               )}
               <div className="messagesEnd" name="messagesEnd" />
             </ChatContainer>
-            <ChatInputForm />
+            <ChatInputForm onSubmit={this.sendMessage} />
           </Wrapper>
         </Container>
       </OuterWrapper>
@@ -106,6 +114,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       logout: () => userActions.userLogout(),
+      sendMessage: message => actions.chatSendMessage(message),
     },
     dispatch
   );
