@@ -52,6 +52,12 @@ export const ChatLine = styled.li`
     font-size: 12px;
     color: ${props => props.theme.colors.LIGHTISH_GREY};
   }
+
+  .highlight {
+    background-color: ${props => props.theme.colors.LIGHT_GREEN};
+    color: white;
+    padding: 3px;
+  }
   background-color: ${props =>
     props.ownUser ? props.theme.colors.WHITE : props.theme.colors.WHITE};
   border-radius: 7.5px;
@@ -93,7 +99,6 @@ export const Wrapper = styled.div`
   width: 100%;
   height: 100%;
   background-color: ${props => props.theme.colors.LIGHT_GREY};
-  
 `;
 
 export const OuterWrapper = styled.div`
