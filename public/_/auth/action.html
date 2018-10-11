@@ -1,0 +1,51 @@
+<html>
+    <script src="https://www.gstatic.com/firebasejs/5.5.2/firebase.js"></script>
+    <script type="text/javascript">
+        (function() {
+            document.addEventListener('DOMContentLoaded', function() {
+                let url = window.location.search;
+
+                if (url.length == 0) {
+                    console.error('No query string');
+                    return;
+                    //return window.location.replace('https://joelcioffi.com');
+                }
+                
+                url = url.substr(1);
+
+                const query = {};
+
+                const parts = url.split('&');
+
+                for (let i = 0; i < parts.length; ++i) {
+                    const pair = parts[i].split('=');
+                    query[pair[0]] = decodeURIComponent(pair[1]).replace(/\+/g, ' ');
+                }
+
+                var config = {
+                    apiKey: "AIzaSyDP7Ff6_W84uy4O-4WpPBnBJLVXrQLYy_o",
+                    authDomain: "the-unbearables-dev.firebaseapp.com",
+                    databaseURL: "https://the-unbearables-dev.firebaseio.com",
+                    projectId: "the-unbearables-dev",
+                    //storageBucket: "the-unbearables-dev.appspot.com",
+                    //messagingSenderId: "311536213778"
+                };
+
+                const app = firebase.initializeApp(config);
+                const auth = app.auth();
+
+                if (query['mode'] == 'verifyEmail') {
+                    auth.applyActionCode(query['oobCode']).then(function() {
+                        alert('success!');
+                        setTimeout(function() {
+                            window.location.replace('https://joelcioffi.com');
+                        }, 5000);
+                    }).catch(function(error) {
+                        console.error("Failed!");
+                        console.log(error);
+                    });
+                }
+            });
+        })();
+    </script>
+</html>
