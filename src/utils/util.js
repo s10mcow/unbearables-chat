@@ -19,11 +19,11 @@ export const decorateOutput = (output, username) => {
     if (url.match(urlNonRelativePathRegex) == null) url = '//' + match;
     return '<a target="_blank" href="' + url + '">' + match + '</a>';
   });
-  const userRegex = new RegExp(`@[${username}]`, 'g');
+  const userRegex = new RegExp(`@${username}`, 'gi');
 
   const userizedOutput = anchorizedOutput.replace(
     userRegex,
-    match => `<span className="highlight">${match}</span>`
+    match => `<span class="highlight">${match}</span>`
   );
 
   return userizedOutput;
