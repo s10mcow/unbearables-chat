@@ -33,7 +33,7 @@ class LoginForm extends React.PureComponent<OwnProps> {
         <Input
           name="username"
           type="text"
-          placeholder="Username or E-Mail"
+          placeholder="Username"
           required
         />
         <Input
