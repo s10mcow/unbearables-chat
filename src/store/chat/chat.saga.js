@@ -3,6 +3,7 @@ import { takeLatest, call, select, take, put, fork } from 'redux-saga/effects';
 import type { Saga } from 'redux-saga';
 import { buffers, eventChannel } from 'redux-saga';
 import rsf from '../rsf';
+import firebase from 'firebase';
 import { CHAT_INIT, CHAT_SEND_MESSAGE, CHAT_LOGOUT } from './chat.action';
 import actions from './chat.action';
 import userActions from '../user/user.action';
@@ -11,8 +12,10 @@ import { reset } from 'redux-form';
 import { push } from 'connected-react-router';
 import { AppIsReadOnly } from '../app/app.reducer';
 
-export const contentPath = 'live-chat/content/';
-export const memberPath = 'live-chat/members/';
+//export const contentPath = 'live-chat/content/';
+//export const memberPath = 'live-chat/members/';
+export const contentPath = 'v2/live-chat/messages/';
+export const memberPath = 'v2/live-chat/presence/';
 let contentChannel;
 let memberChannel;
 
@@ -36,48 +39,44 @@ function channel(pathOrRef, event, action, limit) {
 function* chatInit(): Saga<void> {
   try {
     const user = yield select(getUserData);
-    const userPath = `${memberPath}${user.uid}`;
+    const userPath = memberPath + user.uid;//`${memberPath}${user.uid}`;
     const ref = rsf.app.database().ref(userPath);
-    const snapshot = yield call([ref, ref.once], 'value');
-    const rosterUpdate = {
-      lastSeen: Date.now(),
-    };
-    if (snapshot.val() == null) {
-      rosterUpdate.name = user.displayName;
-      rosterUpdate.firstSeen = rosterUpdate.lastSeen;
-    }
-    yield call([ref, ref.update], rosterUpdate);
+    const disconnect = ref.onDisconnect();
+    yield call([disconnect, disconnect.set], null);
+    const now = { at: firebase.database.ServerValue.TIMESTAMP, name: user.displayName };
+    yield call([ref, ref.set], now);
     yield call(startChannels);
     yield put(push('/chat'));
-  } catch (error) {
-    console.error(error);
+  } catch(err) {
+    console.error(err);
   }
 }
 
 function* startChannels() {
   yield fork(contentAdd);
   yield fork(memberAdd);
+  yield fork(memberRemove);
 }
 
-// function* memberRemove() {
-//   const contentChannel = yield call(
-//     channel,
-//     memberPath,
-//     'child_removed',
-//     actions.chatMemeberRemove
-//   );
-//   while (true) {
-//     const contentAction = yield take(contentChannel);
-//     yield put(contentAction);
-//   }
-// }
+function* memberRemove() {
+  const contentChannel = yield call(
+    channel,
+    memberPath,
+    'child_removed',
+    actions.chatMemberRemove
+  );
+  while (true) {
+    const contentAction = yield take(contentChannel);
+    yield put(contentAction);
+  }
+}
 
 function* memberAdd() {
   memberChannel = yield call(
     channel,
     memberPath,
     'child_added',
-    actions.chatMemeberUpdate
+    actions.chatMemberUpdate
   );
   while (true) {
     const contentAction = yield take(memberChannel);
@@ -137,7 +136,7 @@ function* chatSendMessage(action) {
       .ref(contentPath)
       .push();
     const post = {
-      at: Date.now(),
+      at: firebase.database.ServerValue.TIMESTAMP,
       content: action.message,
       from: user.uid,
       name: user.displayName,

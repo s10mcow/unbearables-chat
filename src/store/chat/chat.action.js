@@ -29,15 +29,15 @@ const chatContentUpdate = (content: Array<any>) => ({
   content,
 });
 
-const chatMemeberUpdate = (members: Array<any>) => ({
+const chatMemberUpdate = (members: Array<any>) => ({
   type: CHAT_MEMBER_UPDATE,
   members,
 });
 
-// const chatMemeberRemove = member => ({
-//   type: CHAT_MEMBER_REMOVE,
-//   member,
-// });
+const chatMemberRemove = member => ({
+  type: CHAT_MEMBER_REMOVE,
+  member,
+});
 
 const chatSendMessage = (message: ChatObjectType) => ({
   type: CHAT_SEND_MESSAGE,
@@ -54,7 +54,8 @@ const chatReset = () => ({
 
 const chat = {
   initialize,
-  chatMemeberUpdate,
+  chatMemberUpdate,
+  chatMemberRemove,
   chatContentUpdate,
   chatLogout,
   chatSendMessage,
