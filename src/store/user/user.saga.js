@@ -4,6 +4,7 @@ import type { Saga } from 'redux-saga';
 import { push } from 'connected-react-router';
 import appActions from '../app/app.action';
 import rsf from '../rsf';
+import firebase from 'firebase';
 import {
   USER_LOGIN,
   USER_SIGNUP,
@@ -74,6 +75,10 @@ function* userSignup({ username, email, password }): Saga<void> {
 
 function* userLogout() {
   try {
+    const user = yield select(getUserData);
+    const userPath = `${memberPath}${user.uid}`;
+    const ref = rsf.app.database().ref(userPath);
+    yield call([ref, ref.set], null);
     yield call(rsf.auth.signOut);
     yield put(actions.userLogoutSuccess());
     yield put(chatActions.chatLogout());
@@ -109,7 +114,8 @@ function* userUpdateLastSeen() {
     const userPath = `${memberPath}${user.uid}`;
     const ref = rsf.app.database().ref(userPath);
     const rosterUpdate = {
-      lastSeen: Date.now(),
+      name: user.displayName,
+      lastSeen: firebase.database.ServerValue.TIMESTAMP,
     };
     yield call([ref, ref.update], rosterUpdate);
   } catch (e) {

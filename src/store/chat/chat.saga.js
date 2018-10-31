@@ -151,6 +151,12 @@ function* chatSendMessage(action) {
 
 function* chatLogout() {
   try {
+    const user = yield select(getUserData);
+    if (user.uid !== '') {
+      const userPath = memberPath + user.uid;
+      const ref = rsf.app.database().ref(userPath);
+      yield call([ref, ref.set], null);
+    }
     if (contentChannel) {
       yield call(contentChannel.close);
     }
