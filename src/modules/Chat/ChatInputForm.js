@@ -36,6 +36,8 @@ class ChatInputForm extends React.PureComponent<OwnProps> {
           fullWidth
           name="message"
           type="text"
+          autoComplete="off"
+          spellCheck="on"
           placeholder={
             isReadOnly
               ? 'Verify your email to get in the bear cave.'
