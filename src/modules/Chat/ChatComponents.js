@@ -1,3 +1,4 @@
+//@flow
 import React from 'react';
 import styled from 'styled-components';
 //import image from 'assets/images/splash.png';
@@ -6,8 +7,9 @@ import { MdMoreVert } from 'react-icons/md';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import breakpoint from 'styled-components-breakpoint';
+import distanceInWords from 'date-fns/distance_in_words';
 
-export const LogoutMenu = props => (
+export const LogoutMenu = (props: { onClick: ?Function, logout: Function }) => (
   <Menu
     MenuLabel={props => (
       <IconButton onClick={props.onClick}>
@@ -40,6 +42,7 @@ export const ChatLine = styled.li`
   padding: 6px 7px 8px 9px;
   max-width: 400px;
   font-size: 16px;
+  min-width: 140px;
   .name {
     font-weight: bold;
     margin-bottom: 5px;
@@ -141,3 +144,42 @@ export const Header = styled.header`
     margin-left: auto;
   }
 `;
+
+type TimeProps = {
+  from: number,
+};
+
+type TimeState = {
+  now: number,
+};
+
+export class TimeFrom extends React.PureComponent<TimeProps, TimeState> {
+  state = {
+    now: Date.now(),
+  };
+
+  interval = undefined;
+
+  newMinute() {
+    this.setState({
+      now: Date.now(),
+    });
+  }
+
+  componentDidMount() {
+    this.interval = setInterval(() => this.newMinute(), 60 * 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  render() {
+    const { from } = this.props;
+    return (
+      <div className="timestamp">
+        {distanceInWords(this.state.now, from) + ' ago'}
+      </div>
+    );
+  }
+}

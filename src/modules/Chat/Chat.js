@@ -21,8 +21,8 @@ import {
   Header,
   Wrapper,
   LoaderContainer,
+  TimeFrom
 } from './ChatComponents';
-import distanceInWords from 'date-fns/distance_in_words';
 
 const clean = (input, user) =>
   input && decorateOutput(sanitizeInput(input), user.toLowerCase());
@@ -92,9 +92,7 @@ class Home extends React.PureComponent<Props> {
                         __html: clean(data.value.content, user.displayName),
                       }}
                     />
-                    <div className="timestamp">
-                      {distanceInWords(Date.now(), data.value.at) + ' ago'}
-                    </div>
+                    <TimeFrom from={data.value.at} />
                   </ChatLine>
                 ))
               ) : (
