@@ -11,6 +11,7 @@ import Members from 'src/components/Members/Members';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { scroller } from 'react-scroll';
 import actions from 'src/store/chat/chat.action';
+import { withRouter } from 'react-router';
 
 import {
   LogoutMenu,
@@ -21,7 +22,7 @@ import {
   Header,
   Wrapper,
   LoaderContainer,
-  TimeFrom
+  TimeFrom,
 } from './ChatComponents';
 
 const clean = (input, user) =>
@@ -32,6 +33,7 @@ type Props = {
   sendMessage: Function,
   user: UserObjectType,
   chat: [],
+  history: Function,
 };
 
 class Home extends React.PureComponent<Props> {
@@ -124,7 +126,9 @@ const mapStateToProps = state => ({
   chat: state && state.chat && state.chat.content,
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Home);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Home)
+);

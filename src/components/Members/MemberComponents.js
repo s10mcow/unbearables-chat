@@ -1,6 +1,10 @@
+import React from 'react';
 import styled from 'styled-components';
 import breakpoint from 'styled-components-breakpoint';
-
+import avatarImage from 'assets/images/logo.jpg';
+import Avatar from '@material-ui/core/Avatar';
+import distanceInWords from 'date-fns/distance_in_words';
+import isWithinRange from 'date-fns/is_within_range';
 export const LoaderContainer = styled.div`
   display: flex;
   flex: 1;
@@ -19,15 +23,16 @@ export const MemberContainer = styled.div`
   background-color: ${props => props.theme.colors.LIGHT_GREY};
   ${breakpoint('mobile', 'tablet')`
     position: ${props => (props.isOpen ? 'absolute' : '')};
-    z-index: 1;
+    z-index: 2;
     top: 0;
     bottom: 0;
   `};
 `;
 
-export const Member = styled.div`
+const StyledMember = styled.div`
   display: flex;
   align-items: center;
+  position: relative;
   background: white;
   padding: 10px;
   font-size: 36px;
@@ -45,6 +50,17 @@ export const Member = styled.div`
     height: ${props => (props.small ? '35px' : '50px')};
     width: ${props => (props.small ? '35px' : '50px')};
   }
+
+  .LastSeen {
+    position: absolute;
+    right: 10px;
+    font-weight: bolddte fns;
+    font-size: 12px;
+    &--collapsed {
+      top: 5px;
+      right: 5px;
+    }
+  }
 `;
 
 export const Members = styled.div`
@@ -52,3 +68,62 @@ export const Members = styled.div`
   flex-direction: column;
   overflow: auto;
 `;
+
+const Cirlce = styled.div`
+  display: flex;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+`;
+
+const GreenCircle = styled(Cirlce)`
+  background: ${props => props.theme.colors.GREEN};
+`;
+
+const OrangeCircle = styled(Cirlce)`
+  background: ${props => props.theme.colors.GREEN};
+`;
+
+const RedCircle = styled(Cirlce)`
+  background: ${props => props.theme.colors.RED};
+`;
+
+class NotificationColor extends React.PureComponent {
+  seenSince(now, lastSeen) {
+    return `Last seen ${distanceInWords(now, lastSeen)} ago`;
+  }
+  render() {
+    const { lastSeen, collapsed } = this.props;
+    const now = Date.now();
+    const fiveMinAgo = now - 5 * 60 * 1000;
+    const oneHourAgo = now - 60 * 60 * 1000;
+    const lastSeenSince = isWithinRange(lastSeen, fiveMinAgo, now) ? (
+      <GreenCircle title={this.seenSince(now, lastSeen)} />
+    ) : isWithinRange(lastSeen, oneHourAgo, fiveMinAgo) ? (
+      <OrangeCircle title={this.seenSince(now, lastSeen)} />
+    ) : (
+      <RedCircle title={this.seenSince(now, lastSeen)} />
+    );
+    return (
+      <div className={collapsed ? 'LastSeen LastSeen--collapsed' : 'LastSeen'}>
+        {lastSeenSince}
+      </div>
+    );
+  }
+}
+
+export class Member extends React.PureComponent {
+  render() {
+    const { data, memberPanelOpen } = this.props;
+    return (
+      <StyledMember {...this.props}>
+        <Avatar className="Avatar" src={avatarImage} />
+        <span>{data.name}</span>
+        <NotificationColor
+          lastSeen={data.lastSeen}
+          collapsed={!memberPanelOpen}
+        />
+      </StyledMember>
+    );
+  }
+}

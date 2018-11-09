@@ -4,6 +4,7 @@ const BASE_PADDING = '20px';
 
 const GREEN = '#264223';
 const LIGHT_GREEN = '#5E8F59';
+const LIGHTER_GREEN = '#aef1a7';
 const PURPLE = '#574E9C';
 const BROWN = '#5C4230';
 const LIGHT_BROWN = '#DBBC8F';
@@ -40,6 +41,7 @@ const theme = {
   colors: {
     GREEN,
     LIGHT_GREEN,
+    LIGHTER_GREEN,
     LIGHTISH_GREY,
     PURPLE,
     BROWN,

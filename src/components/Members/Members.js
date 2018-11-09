@@ -11,8 +11,7 @@ import {
   Members,
   LoaderContainer,
 } from './MemberComponents';
-import avatarImage from 'assets/images/logo.jpg';
-import Avatar from '@material-ui/core/Avatar';
+
 import { type UserObjectType } from 'src/types';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { isMobileDevice } from 'src/utils/util';
@@ -74,17 +73,17 @@ class _Members extends React.PureComponent<Props, State> {
         />
         <Members>
           {members.length ? (
-            members.map((data, key) => (
-              <Member
-                key={key}
-                small={!this.state.memberPanelOpen}
-                title={data.value.name}
-                onClick={() => this.openProfile(data.value, 'Member')}
-              >
-                <Avatar className="Avatar" src={avatarImage} />
-                <span>{data.value.name}</span>
-              </Member>
-            ))
+            members
+              .filter(data => data.value.name !== user.displayName)
+              .map((data, key) => (
+                <Member
+                  key={key}
+                  small={!this.state.memberPanelOpen}
+                  data={data.value}
+                  memberPanelOpen={this.state.memberPanelOpen}
+                  onClick={() => this.openProfile(data.value, 'Member')}
+                />
+              ))
           ) : (
             <LoaderContainer>
               <CircularProgress />

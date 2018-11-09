@@ -10,6 +10,7 @@ import { type UserObjectType } from 'src/types';
 import UserEditForm from './UserEditForm';
 import { bindActionCreators } from 'redux';
 import actions from 'src/store/user/user.action';
+import distanceInWords from 'date-fns/distance_in_words';
 
 const Wrapper = styled.div`
   display: flex;
@@ -74,6 +75,11 @@ const AvatarPanel = styled.article`
     }
     .MemberName {
       font-size: 24px;
+      text-align: center;
+      margin-bottom: 5px;
+    }
+    .MemberLastSeen {
+      font-size: 16px;
     }
   }
 `;
@@ -84,7 +90,7 @@ type Props = {
   openProfile: Function,
   memberPanelOpen: boolean,
   isAvatarOpen: boolean,
-  user: UserObjectType | { name: string },
+  user: UserObjectType | { name: string, lastSeen: string },
   userUpdateInfo: Function,
   type: string,
 };
@@ -129,7 +135,15 @@ class Bearatar extends React.PureComponent<Props> {
             {type === 'Profile' && (
               <UserEditForm user={user} onSubmit={this.userUpdateInfo} />
             )}
-            {type === 'Member' && <div className="MemberName">{user.name}</div>}
+            {type === 'Member' && (
+              <div>
+                <div className="MemberName">{user.name}</div>
+                <div className="MemberLastSeen">{`Last seen ${distanceInWords(
+                  Date.now(),
+                  user.lastSeen
+                )} ago`}</div>
+              </div>
+            )}
           </main>
         </AvatarPanel>
       </Wrapper>
