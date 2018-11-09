@@ -89,12 +89,33 @@ const RedCircle = styled(Cirlce)`
 `;
 
 class NotificationColor extends React.PureComponent {
+  state = {
+    now: Date.now(),
+  };
+
+  interval = undefined;
+
+  componentDidMount() {
+    this.interval = setInterval(() => this.checkLastSeen(), 5 * 60 * 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  checkLastSeen() {
+    this.setState({
+      now: Date.now(),
+    });
+  }
+
   seenSince(now, lastSeen) {
     return `Last seen ${distanceInWords(now, lastSeen)} ago`;
   }
+
   render() {
     const { lastSeen, collapsed } = this.props;
-    const now = Date.now();
+    const { now } = this.state;
     const fiveMinAgo = now - 5 * 60 * 1000;
     const oneHourAgo = now - 60 * 60 * 1000;
     const lastSeenSince = isWithinRange(lastSeen, fiveMinAgo, now) ? (
@@ -104,6 +125,7 @@ class NotificationColor extends React.PureComponent {
     ) : (
       <RedCircle title={this.seenSince(now, lastSeen)} />
     );
+
     return (
       <div className={collapsed ? 'LastSeen LastSeen--collapsed' : 'LastSeen'}>
         {lastSeenSince}

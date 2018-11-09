@@ -17,6 +17,7 @@ import { AppIsReadOnly } from '../app/app.reducer';
 export const contentPath = 'v2/live-chat/messages/';
 export const memberPath = 'v2/live-chat/presence/';
 let contentChannel;
+let membersChannel;
 let memberChannel;
 
 function channel(pathOrRef, event, action, limit) {
@@ -39,15 +40,18 @@ function channel(pathOrRef, event, action, limit) {
 function* chatInit(): Saga<void> {
   try {
     const user = yield select(getUserData);
-    const userPath = memberPath + user.uid;//`${memberPath}${user.uid}`;
+    const userPath = memberPath + user.uid; //`${memberPath}${user.uid}`;
     const ref = rsf.app.database().ref(userPath);
     const disconnect = ref.onDisconnect();
     yield call([disconnect, disconnect.set], null);
-    const now = { at: firebase.database.ServerValue.TIMESTAMP, name: user.displayName };
+    const now = {
+      at: firebase.database.ServerValue.TIMESTAMP,
+      name: user.displayName,
+    };
     yield call([ref, ref.set], now);
     yield call(startChannels);
     yield put(push('/chat'));
-  } catch(err) {
+  } catch (err) {
     console.error(err);
   }
 }
@@ -56,6 +60,7 @@ function* startChannels() {
   yield fork(contentAdd);
   yield fork(memberAdd);
   yield fork(memberRemove);
+  yield fork(memberChanged);
 }
 
 function* memberRemove() {
@@ -72,10 +77,23 @@ function* memberRemove() {
 }
 
 function* memberAdd() {
-  memberChannel = yield call(
+  membersChannel = yield call(
     channel,
     memberPath,
     'child_added',
+    actions.chatMembersUpdate
+  );
+  while (true) {
+    const contentAction = yield take(membersChannel);
+    yield put(contentAction);
+  }
+}
+
+function* memberChanged() {
+  memberChannel = yield call(
+    channel,
+    memberPath,
+    'child_changed',
     actions.chatMemberUpdate
   );
   while (true) {

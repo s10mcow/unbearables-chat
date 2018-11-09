@@ -1,6 +1,7 @@
 // @flow
 import type { ChatStateType } from '../../types';
 import {
+  CHAT_MEMBERS_UPDATE,
   CHAT_MEMBER_UPDATE,
   CHAT_CONTENT_UPDATE,
   CHAT_MEMBER_REMOVE,
@@ -12,6 +13,13 @@ const initialState: ChatStateType = {
   content: [],
   members: [],
 };
+
+const findUpdateMember = (members, data) => members.map(member => {
+  if (data.value.name === member.value.name) {
+    member = Object.assign({}, data);
+  }
+  return member;
+});
 
 const organizeMembers = (members: Array<any>) =>
   members.sort((a, b) => {
@@ -37,10 +45,16 @@ const chatReducer = (
         ...state,
         content: state.content.concat([action.content]),
       };
-    case CHAT_MEMBER_UPDATE:
+    case CHAT_MEMBERS_UPDATE:
       return {
         ...state,
         members: organizeMembers(state.members.concat([action.members])),
+      };
+
+    case CHAT_MEMBER_UPDATE:
+      return {
+        ...state,
+        members: findUpdateMember(state.members, action.member),
       };
 
     case CHAT_MEMBER_REMOVE:

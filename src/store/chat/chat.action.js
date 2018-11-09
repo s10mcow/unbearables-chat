@@ -2,6 +2,7 @@
 import type { ExtractActionsType, ChatObjectType } from '../../types';
 export const CHAT_INIT = 'CHAT_INIT';
 export const CHAT_CONTENT_UPDATE = 'CHAT_CONTENT_UPDATE';
+export const CHAT_MEMBERS_UPDATE = 'CHAT_MEMBERS_UPDATE';
 export const CHAT_MEMBER_UPDATE = 'CHAT_MEMBER_UPDATE';
 export const CHAT_MEMBER_REMOVE = 'CHAT_MEMBER_REMOVE';
 export const CHAT_SEND_MESSAGE = 'CHAT_SEND_MESSAGE';
@@ -29,9 +30,14 @@ const chatContentUpdate = (content: Array<any>) => ({
   content,
 });
 
-const chatMemberUpdate = (members: Array<any>) => ({
-  type: CHAT_MEMBER_UPDATE,
+const chatMembersUpdate = (members: Array<any>) => ({
+  type: CHAT_MEMBERS_UPDATE,
   members,
+});
+
+const chatMemberUpdate = member => ({
+  type: CHAT_MEMBER_UPDATE,
+  member,
 });
 
 const chatMemberRemove = member => ({
@@ -54,6 +60,7 @@ const chatReset = () => ({
 
 const chat = {
   initialize,
+  chatMembersUpdate,
   chatMemberUpdate,
   chatMemberRemove,
   chatContentUpdate,
