@@ -77,11 +77,11 @@ const Cirlce = styled.div`
 `;
 
 const GreenCircle = styled(Cirlce)`
-  background: ${props => props.theme.colors.GREEN};
+  background: ${props => props.theme.colors.LIGHTER_GREEN};
 `;
 
 const OrangeCircle = styled(Cirlce)`
-  background: ${props => props.theme.colors.GREEN};
+  background: ${props => props.theme.colors.ORANGE};
 `;
 
 const RedCircle = styled(Cirlce)`

@@ -15,6 +15,7 @@ const LIGHTER_GREY = '#F2EFED';
 const WHITE = '#FFFFFF';
 const BLACK = '#000000';
 const RED = '#ff1200';
+const ORANGE = '#ffa624';
 
 const flexboxgrid = {
   // Defaults
@@ -52,6 +53,7 @@ const theme = {
     WHITE,
     BLACK,
     RED,
+    ORANGE,
   },
   buttonBorderRadius: BASE_BORDER_RADIUS,
   buttonPaddingLarge: '15px 20px',
