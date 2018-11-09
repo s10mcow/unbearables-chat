@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import breakpoint from 'styled-components-breakpoint';
 import distanceInWords from 'date-fns/distance_in_words';
+import isWithinRange from 'date-fns/is_within_range';
 
 export const LogoutMenu = (props: { onClick: ?Function, logout: Function }) => (
   <Menu
@@ -168,8 +169,15 @@ export class TimeFrom extends React.PureComponent<TimeProps, TimeState> {
     });
   }
 
+  getInterval() {
+    const { from } = this.props;
+    const now = Date.now();
+    const oneHourAgo = now - 60 * 60 * 1000;
+    return isWithinRange(from, oneHourAgo, now) ? 60 * 1000 : 60 * 60 * 1000;
+  }
+
   componentDidMount() {
-    this.interval = setInterval(() => this.newMinute(), 60 * 1000);
+    this.interval = setInterval(() => this.newMinute(), this.getInterval());
   }
 
   componentWillUnmount() {
