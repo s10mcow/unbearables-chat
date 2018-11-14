@@ -7,7 +7,6 @@ import Chat from './modules/Chat/Chat';
 import { getUserData, userIsLoggedIn } from './store/user/user.reducer';
 import { bindActionCreators } from 'redux';
 import ResetPassword from './modules/ResetPassword/ResetPassword';
-import Youtube from './modules/Youtube/Youtube';
 
 type Props = {
   location: { pathname: string, search: string, hash: string, key: string },
@@ -33,7 +32,7 @@ class Routes extends React.PureComponent<Props, null> {
           <Route path="/login" component={Login} />
           <Route path="/chat" component={Chat} />
           <Route path="/resetpassword" component={ResetPassword} />
-          <Route path="/youtube" component={Youtube} />
+
           <Redirect to="/login" />
         </Switch>
       </React.Fragment>
