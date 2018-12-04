@@ -21,7 +21,7 @@ class Routes extends React.PureComponent<Props, null> {
     if (!userIsLoggedIn) {
       history.push('/login');
     } else {
-      history.push('/chat');
+      history.push('/');
     }
   }
 
@@ -30,7 +30,7 @@ class Routes extends React.PureComponent<Props, null> {
       <React.Fragment>
         <Switch>
           <Route path="/login" component={Login} />
-          <Route path="/chat" component={Chat} />
+          <Route path="/" component={Chat} />
           <Route path="/resetpassword" component={ResetPassword} />
 
           <Redirect to="/login" />

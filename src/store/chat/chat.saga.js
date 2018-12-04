@@ -50,7 +50,7 @@ function* chatInit(): Saga<void> {
     };
     yield call([ref, ref.set], now);
     yield call(startChannels);
-    yield put(push('/chat'));
+    yield put(push('/'));
   } catch (err) {
     console.error(err);
   }
