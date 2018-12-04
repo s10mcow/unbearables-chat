@@ -12,6 +12,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { scroller } from 'react-scroll';
 import actions from 'src/store/chat/chat.action';
 import { withRouter } from 'react-router';
+import Notification from 'react-web-notification';
+import icon from 'assets/images/splash.png';
 
 import {
   LogoutMenu,
@@ -35,8 +37,16 @@ type Props = {
   chat: [],
   history: Function,
 };
+type State = {
+  title: string,
+  options: { body: string },
+};
+class Home extends React.PureComponent<Props, State> {
+  state = {
+    title: 'Unbearables Chat',
+    options: { body: '', icon },
+  };
 
-class Home extends React.PureComponent<Props> {
   logout = () => {
     this.props.logout();
   };
@@ -55,8 +65,19 @@ class Home extends React.PureComponent<Props> {
     this.scrollToBottom();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     this.scrollToBottom();
+    if (prevProps.chat.length < this.props.chat.length) {
+      const options = Object.assign(this.state.options, {
+        body: `${this.props.chat[this.props.chat.length - 1].value.name}: ${
+          this.props.chat[this.props.chat.length - 1].value.content
+        }`,
+      });
+
+      this.setState({
+        options,
+      });
+    }
   }
 
   sendMessage = data => {
@@ -107,6 +128,7 @@ class Home extends React.PureComponent<Props> {
             <ChatInputForm onSubmit={this.sendMessage} />
           </Wrapper>
         </Container>
+        <Notification title={this.state.title} options={this.state.options} />
       </OuterWrapper>
     );
   }
