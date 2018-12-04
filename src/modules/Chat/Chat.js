@@ -44,7 +44,7 @@ type State = {
 class Home extends React.PureComponent<Props, State> {
   state = {
     title: 'Unbearables Chat',
-    options: { body: '', icon },
+    options: { body: '', disableActiveWindow: true, icon },
   };
 
   logout = () => {
@@ -68,11 +68,13 @@ class Home extends React.PureComponent<Props, State> {
   componentDidUpdate(prevProps) {
     this.scrollToBottom();
     if (prevProps.chat.length < this.props.chat.length) {
-      const options = Object.assign(this.state.options, {
+      const options = {
         body: `${this.props.chat[this.props.chat.length - 1].value.name}: ${
           this.props.chat[this.props.chat.length - 1].value.content
         }`,
-      });
+        disableActiveWindow: true,
+        icon,
+      };
 
       this.setState({
         options,
