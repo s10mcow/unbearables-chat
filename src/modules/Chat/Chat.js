@@ -40,11 +40,13 @@ type Props = {
 type State = {
   title: string,
   options: { body: string },
+  ignore: boolean,
 };
 class Home extends React.PureComponent<Props, State> {
   state = {
     title: 'Unbearables Chat',
     options: { body: '', disableActiveWindow: true, icon },
+    ignore: true,
   };
 
   logout = () => {
@@ -63,6 +65,12 @@ class Home extends React.PureComponent<Props, State> {
 
   componentDidMount() {
     this.scrollToBottom();
+    window.addEventListener('focus', () => {
+      this.setState({ ignore: true });
+    });
+    window.addEventListener('blur', () => {
+      this.setState({ ignore: false });
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -74,12 +82,22 @@ class Home extends React.PureComponent<Props, State> {
         }`,
         disableActiveWindow: true,
         icon,
+        vibrate: true,
       };
 
       this.setState({
         options,
       });
     }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('focus', () => {
+      this.setState({ ignore: true });
+    });
+    window.removeEventListener('blur', () => {
+      this.setState({ ignore: false });
+    });
   }
 
   sendMessage = data => {
@@ -130,7 +148,11 @@ class Home extends React.PureComponent<Props, State> {
             <ChatInputForm onSubmit={this.sendMessage} />
           </Wrapper>
         </Container>
-        <Notification title={this.state.title} options={this.state.options} />
+        <Notification
+          title={this.state.title}
+          options={this.state.options}
+          ignore={this.state.ignore}
+        />
       </OuterWrapper>
     );
   }
