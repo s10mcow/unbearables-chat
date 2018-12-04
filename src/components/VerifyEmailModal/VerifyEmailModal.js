@@ -16,6 +16,10 @@ import actions from 'src/store/app/app.action';
 import { bindActionCreators } from 'redux';
 
 class VerifyEmailModal extends React.PureComponent {
+  shouldOpenModal = (isAccountVerified, verifySent) =>
+    typeof isAccountVerified === 'boolean'
+      ? !isAccountVerified && !verifySent
+      : false;
   render() {
     const {
       resendVerify,
@@ -28,7 +32,7 @@ class VerifyEmailModal extends React.PureComponent {
 
     return isUserLoggedIn && !isReadOnly ? (
       <React.Fragment>
-        <Dialog open={!isAccountVerified && !verifySent}>
+        <Dialog open={this.shouldOpenModal(isAccountVerified, verifySent)}>
           <DialogTitle>Email Bearification</DialogTitle>
           <DialogContent>
             <DialogContentText>

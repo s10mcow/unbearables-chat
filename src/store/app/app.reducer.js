@@ -13,9 +13,9 @@ import {
 const initialState: AppStateType = {
   loaders: [],
   appInitialized: false,
-  isAccountVerified: false,
+  isAccountVerified: undefined,
   verifySent: false,
-  isReadOnly: false,
+  isReadOnly: undefined,
 };
 
 const appReducer = (
