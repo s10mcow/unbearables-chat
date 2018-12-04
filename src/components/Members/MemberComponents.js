@@ -125,7 +125,6 @@ class NotificationColor extends React.PureComponent {
     ) : (
       <RedCircle title={this.seenSince(now, lastSeen)} />
     );
-
     return (
       <div className={collapsed ? 'LastSeen LastSeen--collapsed' : 'LastSeen'}>
         {lastSeenSince}
@@ -137,6 +136,7 @@ class NotificationColor extends React.PureComponent {
 export class Member extends React.PureComponent {
   render() {
     const { data, memberPanelOpen } = this.props;
+
     return (
       <StyledMember {...this.props}>
         <Avatar className="Avatar" src={avatarImage} />
