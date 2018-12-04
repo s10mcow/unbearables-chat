@@ -74,7 +74,7 @@ class _Members extends React.PureComponent<Props, State> {
         <Members>
           {members.length ? (
             members
-              // .filter(data => data.value.name !== user.displayName)
+              .filter(data => data.value.name !== user.displayName)
               .map((data, key) => (
                 <Member
                   key={key}
