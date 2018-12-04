@@ -96,7 +96,7 @@ class NotificationColor extends React.PureComponent {
   interval = undefined;
 
   componentDidMount() {
-    this.interval = setInterval(() => this.checkLastSeen(), 5 * 60 * 1000);
+    this.interval = setInterval(() => this.checkLastSeen(), 5000);
   }
 
   componentWillUnmount() {
@@ -112,8 +112,8 @@ class NotificationColor extends React.PureComponent {
   seenSince(now, lastSeen) {
     return `Last seen ${distanceInWords(now, lastSeen)} ago`;
   }
-
   render() {
+    window.x = isWithinRange;
     const { lastSeen, collapsed } = this.props;
     const { now } = this.state;
     const fiveMinAgo = now - 5 * 60 * 1000;
@@ -136,13 +136,12 @@ class NotificationColor extends React.PureComponent {
 export class Member extends React.PureComponent {
   render() {
     const { data, memberPanelOpen } = this.props;
-
     return (
       <StyledMember {...this.props}>
         <Avatar className="Avatar" src={avatarImage} />
         <span>{data.name}</span>
         <NotificationColor
-          lastSeen={data.lastSeen}
+          lastSeen={data.lastSeen || data.at}
           collapsed={!memberPanelOpen}
         />
       </StyledMember>

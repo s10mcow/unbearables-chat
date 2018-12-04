@@ -51,7 +51,9 @@ export const ChatLine = styled.li`
   border-radius: 7.5px;
   box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
   margin: 0 10px 10px;
-  word-break: break-all;
+  a {
+    word-break: break-all;
+  }
   &:after {
     content: '';
     position: absolute;

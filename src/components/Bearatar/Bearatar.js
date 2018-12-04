@@ -90,7 +90,7 @@ type Props = {
   openProfile: Function,
   memberPanelOpen: boolean,
   isAvatarOpen: boolean,
-  user: UserObjectType | { name: string, lastSeen: string },
+  user: UserObjectType | { name: string, lastSeen: string, at: string },
   userUpdateInfo: Function,
   type: string,
 };
@@ -140,7 +140,7 @@ class Bearatar extends React.PureComponent<Props> {
                 <div className="MemberName">{user.name}</div>
                 <div className="MemberLastSeen">{`Last seen ${distanceInWords(
                   Date.now(),
-                  user.lastSeen
+                  user.lastSeen || user.at
                 )} ago`}</div>
               </div>
             )}
