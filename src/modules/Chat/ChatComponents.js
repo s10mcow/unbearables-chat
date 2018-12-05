@@ -33,8 +33,8 @@ export const ScrollBottomButton = styled.button`
   border: none;
   position: absolute;
   z-index: 111;
-  bottom: 160px;
-  right: 60px;
+  bottom: 110px;
+  right: 10px;
   transform: scale(0.5);
   opacity: 0;
   transition: all 0.3s ease-in-out;
@@ -131,6 +131,7 @@ export const Wrapper = styled.div`
   justify-content: space-between;
   width: 100%;
   height: 100%;
+  position: relative;
   background-color: ${props => props.theme.colors.LIGHT_GREY};
 `;
 
