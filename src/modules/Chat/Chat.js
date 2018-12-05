@@ -1,5 +1,6 @@
 //@flow
 import React from 'react';
+import styled from 'styled-components';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -27,6 +28,30 @@ import {
   TimeFrom,
 } from './ChatComponents';
 
+const ScrollBottomButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: white;
+  height: 42px;
+  width: 42px;
+  border: none;
+  position: absolute;
+  z-index: 111;
+  bottom: 160px;
+  right: 60px;
+  transform: scale(0.5);
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.06), 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  &.active {
+    transform: scale(1);
+    opacity: 1;
+  }
+`;
+
 const clean = (input, user) =>
   input && decorateOutput(sanitizeInput(input), user.toLowerCase());
 
@@ -41,21 +66,28 @@ type State = {
   title: string,
   options: { body: string },
   ignore: boolean,
+  hasUserScrolled: boolean,
 };
 class Home extends React.PureComponent<Props, State> {
+  constructor(props) {
+    super(props);
+    this.messagesEnd = React.createRef();
+    this.chatContainer = React.createRef();
+  }
+
   state = {
     title: 'Unbearables Chat',
     options: { body: '', disableActiveWindow: true, icon },
     ignore: true,
+    hasUserScrolled: false,
   };
 
   logout = () => {
     this.props.logout();
   };
 
-  messagesEnd = React.createRef();
-
   scrollToBottom = () => {
+    if (this.state.hasUserScrolled) return;
     scroller.scrollTo('messagesEnd', {
       duration: 500,
       smooth: true,
@@ -70,6 +102,13 @@ class Home extends React.PureComponent<Props, State> {
     });
     window.addEventListener('blur', () => {
       this.setState({ ignore: false });
+    });
+    this.chatContainer.current.addEventListener('scroll', e => {
+      const { target } = e;
+      this.setState({
+        hasUserScrolled:
+          target.scrollHeight - target.scrollTop !== target.clientHeight,
+      });
     });
   }
 
@@ -100,6 +139,11 @@ class Home extends React.PureComponent<Props, State> {
     });
   }
 
+  forceScrollToBottom = () => {
+    this.setState({ hasUserScrolled: false });
+    this.scrollToBottom();
+  };
+
   sendMessage = data => {
     const copiedData = Object.assign({}, data);
     copiedData.message &&
@@ -123,7 +167,7 @@ class Home extends React.PureComponent<Props, State> {
               <span />
               <LogoutMenu logout={this.logout} />
             </Header>
-            <ChatContainer id="ChatContainer">
+            <ChatContainer id="ChatContainer" ref={this.chatContainer}>
               {chat.length ? (
                 chat.map((data, key) => (
                   <ChatLine key={key} ownUser={data.value.from === user.uid}>
@@ -145,6 +189,26 @@ class Home extends React.PureComponent<Props, State> {
               )}
               <div className="messagesEnd" name="messagesEnd" />
             </ChatContainer>
+
+            <ScrollBottomButton
+              onClick={this.forceScrollToBottom}
+              className={this.state.hasUserScrolled ? 'active' : ''}
+            >
+              <svg
+                id="Layer_1"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 21 21"
+                width="21"
+                height="21"
+              >
+                <path
+                  fill="#263238"
+                  fillOpacity=".33"
+                  d="M4.8 6.1l5.7 5.7 5.7-5.7 1.6 1.6-7.3 7.2-7.3-7.2 1.6-1.6z"
+                />
+              </svg>
+            </ScrollBottomButton>
+
             <ChatInputForm onSubmit={this.sendMessage} />
           </Wrapper>
         </Container>

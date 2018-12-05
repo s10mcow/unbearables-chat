@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { ThemeProvider } from 'styled-components';
-import baseStyles from './base-styles';
+import BaseStyles from './base-styles';
 import './index.css';
 import Routes from './Routes';
 import getStoreAndPersistor, { history } from './store/store';
@@ -15,23 +15,21 @@ import VerifyEmailModal from './components/VerifyEmailModal/VerifyEmailModal';
 
 const { store, persistor } = getStoreAndPersistor();
 
-const Application = () => {
-  baseStyles();
-  return (
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <PersistGate loading="loading..." persistor={persistor}>
-          <AppStartup />
-          <VerifyEmailModal />
-          <ConnectedRouter history={history}>
-            <AppReadyWaiter>
-              <Routes />
-            </AppReadyWaiter>
-          </ConnectedRouter>
-        </PersistGate>
-      </ThemeProvider>
-    </Provider>
-  );
-};
+const Application = () => (
+  <Provider store={store}>
+    <ThemeProvider theme={theme}>
+      <PersistGate loading="loading..." persistor={persistor}>
+        <BaseStyles />
+        <AppStartup />
+        <VerifyEmailModal />
+        <ConnectedRouter history={history}>
+          <AppReadyWaiter>
+            <Routes />
+          </AppReadyWaiter>
+        </ConnectedRouter>
+      </PersistGate>
+    </ThemeProvider>
+  </Provider>
+);
 
 export default Application;
