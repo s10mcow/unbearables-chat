@@ -1,6 +1,5 @@
 //@flow
 import React from 'react';
-import styled from 'styled-components';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -26,31 +25,8 @@ import {
   Wrapper,
   LoaderContainer,
   TimeFrom,
+  ScrollBottomButton,
 } from './ChatComponents';
-
-const ScrollBottomButton = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  background: white;
-  height: 42px;
-  width: 42px;
-  border: none;
-  position: absolute;
-  z-index: 111;
-  bottom: 160px;
-  right: 60px;
-  transform: scale(0.5);
-  opacity: 0;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.06), 0 2px 5px 0 rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  &.active {
-    transform: scale(1);
-    opacity: 1;
-  }
-`;
 
 const clean = (input, user) =>
   input && decorateOutput(sanitizeInput(input), user.toLowerCase());
@@ -157,7 +133,7 @@ class Home extends React.PureComponent<Props, State> {
     return (
       <OuterWrapper>
         <Helmet>
-          <title>Unbearables...</title>
+          <title>Unbearables</title>
           <meta name="Chat" content="Chat" />
         </Helmet>
         <Container>
