@@ -88,7 +88,7 @@ class Home extends React.PureComponent<Props, State> {
       const { target } = e;
       this.setState({
         hasUserScrolled:
-          target.scrollHeight - target.scrollTop !== target.clientHeight,
+          target.scrollHeight - target.scrollTop - 50 > target.clientHeight,
       });
     });
   }
@@ -127,6 +127,7 @@ class Home extends React.PureComponent<Props, State> {
 
   sendMessage = data => {
     const copiedData = Object.assign({}, data);
+    this.setState({ hasUserScrolled: false });
     copiedData.message &&
       copiedData.message.length &&
       this.props.sendMessage(copiedData.message);
