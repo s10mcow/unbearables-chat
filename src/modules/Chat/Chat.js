@@ -3,7 +3,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { decorateOutput, sanitizeInput } from 'src/utils/util';
+import { decorateOutput, sanitizeInput, getUrl } from 'src/utils/util';
 import ChatInputForm from './ChatInputForm';
 import userActions from 'src/store/user/user.action';
 import { type UserObjectType } from 'src/types';
@@ -14,6 +14,7 @@ import actions from 'src/store/chat/chat.action';
 import { withRouter } from 'react-router';
 import Notification from 'react-web-notification';
 import icon from 'assets/images/splash.png';
+import MicrolinkCard from 'react-microlink';
 
 import {
   LogoutMenu,
@@ -44,6 +45,10 @@ type State = {
   ignore: boolean,
   hasUserScrolled: boolean,
 };
+
+const UrlPreview = ({ content }) =>
+  getUrl(content) ? <MicrolinkCard url={getUrl(content)} /> : null;
+
 class Home extends React.PureComponent<Props, State> {
   constructor(props) {
     super(props);
@@ -150,11 +155,15 @@ class Home extends React.PureComponent<Props, State> {
                     {data.value.from !== user.uid && (
                       <div className="name">{data.value.name}</div>
                     )}
+
                     <span
                       dangerouslySetInnerHTML={{
                         __html: clean(data.value.content, user.displayName),
                       }}
                     />
+
+                    <UrlPreview content={data.value.content} />
+
                     <TimeFrom from={data.value.at} />
                   </ChatLine>
                 ))

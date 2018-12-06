@@ -1,6 +1,6 @@
 const urlNonRelativePathRegex = /\/\/.*\./gi;
-const urlFinderRegex = /(?:https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}[^.]\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/gi;
-
+const urlFinderRegex = /(?:https?:\/\/)?(www .)?[-a-zA-Z0-9@:%._+~#=]{2,256}[^.]\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/gi;
+const urlRegex = /(https?:\/\/[^ ]*)/;
 const dirtyToCleanCharacterMap = { '<': '&lt;', '>': '&gt;' };
 const dirtyToCleanRegex = new RegExp(
   Object.keys(dirtyToCleanCharacterMap).join('|'),
@@ -8,6 +8,11 @@ const dirtyToCleanRegex = new RegExp(
 );
 export const sanitizeInput = input =>
   input.replace(dirtyToCleanRegex, match => dirtyToCleanCharacterMap[match]);
+
+export const isUrl = input => urlFinderRegex.test(input);
+
+export const getUrl = input =>
+  input.match(urlRegex) ? input.match(urlRegex)[1] : false;
 
 export const decorateOutput = (output, username) => {
   const anchorizedOutput = output.replace(urlFinderRegex, match => {
@@ -17,7 +22,7 @@ export const decorateOutput = (output, username) => {
     //    url = '//' + match;
     // instead, we must:
     if (url.match(urlNonRelativePathRegex) == null) url = '//' + match;
-    return '<a target="_blank" href="' + url + '">' + match + '</a>';
+    return '';
   });
   const userRegex = new RegExp(`@${username}`, 'gi');
 
