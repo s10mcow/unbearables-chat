@@ -76,6 +76,28 @@ class Home extends React.PureComponent<Props, State> {
     });
   };
 
+  handleScroll = e => {
+    const { target } = e;
+
+    if (
+      this.state.hasUserScrolled &&
+      target.scrollHeight - target.scrollTop - 50 > target.clientHeight
+    ) {
+      return;
+    }
+    if (
+      !this.state.hasUserScrolled &&
+      target.scrollHeight - target.scrollTop - 50 < target.clientHeight
+    ) {
+      return;
+    }
+
+    this.setState({
+      hasUserScrolled:
+        target.scrollHeight - target.scrollTop - 50 > target.clientHeight,
+    });
+  };
+
   componentDidMount() {
     this.scrollToBottom();
     window.addEventListener('focus', () => {
@@ -84,13 +106,7 @@ class Home extends React.PureComponent<Props, State> {
     window.addEventListener('blur', () => {
       this.setState({ ignore: false });
     });
-    this.chatContainer.current.addEventListener('scroll', e => {
-      const { target } = e;
-      this.setState({
-        hasUserScrolled:
-          target.scrollHeight - target.scrollTop - 50 > target.clientHeight,
-      });
-    });
+    this.chatContainer.current.addEventListener('scroll', this.handleScroll);
   }
 
   componentDidUpdate(prevProps) {
@@ -118,6 +134,7 @@ class Home extends React.PureComponent<Props, State> {
     window.removeEventListener('blur', () => {
       this.setState({ ignore: false });
     });
+    this.chatContainer.current.removeEventListener('scroll', this.handleScroll);
   }
 
   forceScrollToBottom = () => {

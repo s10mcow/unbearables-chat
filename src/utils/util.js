@@ -22,7 +22,9 @@ export const decorateOutput = (output, username) => {
     //    url = '//' + match;
     // instead, we must:
     if (url.match(urlNonRelativePathRegex) == null) url = '//' + match;
-    return '<a target="_blank" href="' + url + '">' + match + '</a>';
+    return `<a class="chat__url" target="_blank" href="${url}">
+      ${match}
+      </a>`;
   });
   const userRegex = new RegExp(`@${username}`, 'gi');
 

@@ -75,6 +75,9 @@ export const ChatLine = styled.li`
   border-radius: 7.5px;
   box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
   margin: 0 10px 10px;
+  .chat__url {
+    word-break: break-all;
+  }
   .microlink_card {
     margin-top: 5px;
     ${breakpoint('mobile', 'desktop')`
