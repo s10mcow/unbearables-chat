@@ -76,10 +76,12 @@ function* userSignup({ username, email, password }): Saga<void> {
 function* userLogout() {
   try {
     const user = yield select(getUserData);
-    const userPath = `${memberPath}${user.uid}`;
-    const ref = rsf.app.database().ref(userPath);
-    yield call([ref, ref.set], null);
-    yield call(rsf.auth.signOut);
+    if (user.uid) {
+      const userPath = `${memberPath}${user.uid}`;
+      const ref = rsf.app.database().ref(userPath);
+      yield call([ref, ref.set], null);
+      yield call(rsf.auth.signOut);
+    }
     yield put(actions.userLogoutSuccess());
     yield put(chatActions.chatLogout());
     yield put(push('/login'));
