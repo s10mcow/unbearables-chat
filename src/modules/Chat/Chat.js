@@ -125,8 +125,9 @@ class Chat extends React.PureComponent<Props, State> {
           this.props.chat[this.props.chat.length - 1].value.content
         }`,
         disableActiveWindow: true,
+        vibrate: [100, 50, 100],
         icon,
-        vibrate: true,
+        badge: icon,
       };
 
       this.setState({
