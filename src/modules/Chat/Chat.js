@@ -44,6 +44,7 @@ type State = {
   options: { body: string },
   ignore: boolean,
   hasUserScrolled: boolean,
+  swRegistration: any,
 };
 
 const UrlPreview = ({ content }) =>
@@ -64,6 +65,7 @@ class Chat extends React.PureComponent<Props, State> {
     options: { body: '', disableActiveWindow: true, icon },
     ignore: true,
     hasUserScrolled: false,
+    swRegistration: {},
   };
 
   logout = () => {
@@ -110,6 +112,9 @@ class Chat extends React.PureComponent<Props, State> {
       this.setState({ ignore: false });
     });
     this.chatContainer.current.addEventListener('scroll', this.handleScroll);
+    navigator.serviceWorker.ready.then(swRegistration =>
+      this.setState({ swRegistration })
+    );
   }
 
   componentDidUpdate(prevProps) {
@@ -222,7 +227,7 @@ class Chat extends React.PureComponent<Props, State> {
           title={this.state.title}
           options={this.state.options}
           ignore={this.state.ignore}
-          swRegistration={new ServiceWorkerRegistration()}
+          swRegistration={this.state.swRegistration}
         />
       </OuterWrapper>
     );
