@@ -49,12 +49,15 @@ type State = {
 const UrlPreview = ({ content }) =>
   getUrl(content) ? <MicrolinkCard url={getUrl(content)} /> : null;
 
-class Home extends React.PureComponent<Props, State> {
+class Chat extends React.PureComponent<Props, State> {
   constructor(props) {
     super(props);
     this.messagesEnd = React.createRef();
     this.chatContainer = React.createRef();
   }
+
+  messagesEnd;
+  chatContainer;
 
   state = {
     title: 'Unbearables Chat',
@@ -219,6 +222,7 @@ class Home extends React.PureComponent<Props, State> {
           title={this.state.title}
           options={this.state.options}
           ignore={this.state.ignore}
+          swRegistration={ServiceWorkerRegistration}
         />
       </OuterWrapper>
     );
@@ -243,5 +247,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(Home)
+  )(Chat)
 );
