@@ -222,7 +222,7 @@ class Chat extends React.PureComponent<Props, State> {
           title={this.state.title}
           options={this.state.options}
           ignore={this.state.ignore}
-          swRegistration={ServiceWorkerRegistration}
+          swRegistration={new ServiceWorkerRegistration()}
         />
       </OuterWrapper>
     );
