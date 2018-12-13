@@ -124,9 +124,11 @@ class Chat extends React.PureComponent<Props, State> {
     window.addEventListener('blur', () => {
       this.setState({ ignore: false });
     });
-    navigator.serviceWorker.ready.then(swRegistration =>
-      this.setState({ swRegistration })
-    );
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.ready.then(swRegistration =>
+        this.setState({ swRegistration })
+      );
+    }
   }
 
   watchScroll = scroll => {
@@ -172,7 +174,6 @@ class Chat extends React.PureComponent<Props, State> {
     window.removeEventListener('blur', () => {
       this.setState({ ignore: false });
     });
-    // this.chatContainer.current.removeEventListener('scroll', this.handleScroll);
   }
 
   forceScrollToBottom = () => {
