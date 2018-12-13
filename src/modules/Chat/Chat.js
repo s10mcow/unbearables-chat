@@ -3,18 +3,23 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { decorateOutput, sanitizeInput } from 'src/utils/util';
+import { decorateOutput, sanitizeInput, getUrl } from 'src/utils/util';
 import ChatInputForm from './ChatInputForm';
 import userActions from 'src/store/user/user.action';
 import { type UserObjectType } from 'src/types';
 import Members from 'src/components/Members/Members';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { scroller } from 'react-scroll';
 import actions from 'src/store/chat/chat.action';
 import { withRouter } from 'react-router';
 import Notification from 'react-web-notification';
 import icon from 'assets/images/splash.png';
-// import MicrolinkCard from 'react-microlink';
+import MicrolinkCard from 'react-microlink';
+import {
+  AutoSizer,
+  List,
+  CellMeasurer,
+  CellMeasurerCache,
+} from 'react-virtualized';
 
 import {
   LogoutMenu,
@@ -47,18 +52,27 @@ type State = {
   swRegistration: any,
 };
 
-// const UrlPreview = ({ content }) =>
-//   getUrl(content) ? <MicrolinkCard url={getUrl(content)} /> : null;
+class UrlPreview extends React.PureComponent {
+  render() {
+    const { content } = this.props;
+    return getUrl(content) ? <MicrolinkCard url={getUrl(content)} /> : null;
+  }
+}
 
 class Chat extends React.PureComponent<Props, State> {
   constructor(props) {
     super(props);
     this.messagesEnd = React.createRef();
-    this.chatContainer = React.createRef();
+    this.List = React.createRef();
+    this.cache = new CellMeasurerCache({
+      fixedWidth: true,
+      defaultHeight: 73,
+    });
+    this.scroll = {};
   }
 
   messagesEnd;
-  chatContainer;
+  List;
 
   state = {
     title: 'Unbearables Chat',
@@ -73,12 +87,11 @@ class Chat extends React.PureComponent<Props, State> {
   };
 
   scrollToBottom = () => {
-    if (this.state.hasUserScrolled) return;
-    scroller.scrollTo('messagesEnd', {
-      duration: 500,
-      smooth: true,
-      containerId: 'ChatContainer',
-    });
+    if (this.List && this.List.current) {
+      if (!this.state.hasUserScrolled) {
+        this.List.current.scrollToRow(this.props.chat.length);
+      }
+    }
   };
 
   handleScroll = e => {
@@ -111,14 +124,30 @@ class Chat extends React.PureComponent<Props, State> {
     window.addEventListener('blur', () => {
       this.setState({ ignore: false });
     });
-    this.chatContainer.current.addEventListener('scroll', this.handleScroll);
     navigator.serviceWorker.ready.then(swRegistration =>
       this.setState({ swRegistration })
     );
   }
 
+  watchScroll = scroll => {
+    if (this.List && this.List.current) {
+      const difference =
+        this.List.current.getOffsetForRow(
+          'center',
+          this.props.chat.length - 1
+        ) - scroll.scrollTop;
+      if (difference > 500 && !this.state.hasUserScrolled) {
+        return this.setState({ hasUserScrolled: true });
+      }
+      if (difference <= 500 && this.state.hasUserScrolled) {
+        return this.setState({ hasUserScrolled: false });
+      }
+    }
+  };
+
   componentDidUpdate(prevProps) {
     this.scrollToBottom();
+
     if (prevProps.chat.length < this.props.chat.length) {
       const options = {
         body: `${this.props.chat[this.props.chat.length - 1].value.name}: ${
@@ -143,12 +172,11 @@ class Chat extends React.PureComponent<Props, State> {
     window.removeEventListener('blur', () => {
       this.setState({ ignore: false });
     });
-    this.chatContainer.current.removeEventListener('scroll', this.handleScroll);
+    // this.chatContainer.current.removeEventListener('scroll', this.handleScroll);
   }
 
   forceScrollToBottom = () => {
-    this.setState({ hasUserScrolled: false });
-    this.scrollToBottom();
+    this.List.current.scrollToRow(this.props.chat.length);
   };
 
   sendMessage = data => {
@@ -159,8 +187,53 @@ class Chat extends React.PureComponent<Props, State> {
       this.props.sendMessage(copiedData.message);
   };
 
+  chatItem = props => {
+    const {
+      key, // Unique key within array of rows
+      index, // Index of row within collection
+      parent,
+      style,
+    } = props;
+    return (
+      this.props.chat.length >= 50 && (
+        <CellMeasurer
+          key={key}
+          cache={this.cache}
+          parent={parent}
+          columnIndex={0}
+          rowIndex={index}
+        >
+          <div style={Object.assign({}, style, { width: '100%' })}>
+            <ChatLine
+              ownUser={
+                this.props.chat[index].value.from === this.props.user.uid
+              }
+            >
+              {this.props.chat[index].value.from !== this.props.user.uid && (
+                <div className="name">{this.props.chat[index].value.name}</div>
+              )}
+
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: clean(
+                    this.props.chat[index].value.content,
+                    this.props.user.displayName
+                  ),
+                }}
+              />
+
+              <UrlPreview content={this.props.chat[index].value.content} />
+
+              <TimeFrom from={this.props.chat[index].value.at} />
+            </ChatLine>
+          </div>
+        </CellMeasurer>
+      )
+    );
+  };
+
   render() {
-    const { user, chat } = this.props;
+    const { chat } = this.props;
 
     return (
       <OuterWrapper>
@@ -175,26 +248,42 @@ class Chat extends React.PureComponent<Props, State> {
               <span />
               <LogoutMenu logout={this.logout} />
             </Header>
-            <ChatContainer id="ChatContainer" ref={this.chatContainer}>
+            <ChatContainer>
               {chat.length ? (
-                chat.map((data, key) => (
-                  <ChatLine key={key} ownUser={data.value.from === user.uid}>
-                    {data.value.from !== user.uid && (
-                      <div className="name">{data.value.name}</div>
-                    )}
-
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html: clean(data.value.content, user.displayName),
-                      }}
+                <AutoSizer>
+                  {({ width, height }) => (
+                    <List
+                      ref={this.List}
+                      className="List"
+                      rowRenderer={this.chatItem}
+                      rowCount={chat.length}
+                      width={width}
+                      height={height}
+                      deferredMeasurementCache={this.cache}
+                      rowHeight={this.cache.rowHeight}
+                      overscanRowCount={3}
+                      onScroll={this.watchScroll}
                     />
-
-                    {/* <UrlPreview content={data.value.content} /> */}
-
-                    <TimeFrom from={data.value.at} />
-                  </ChatLine>
-                ))
+                  )}
+                </AutoSizer>
               ) : (
+              // chat.map((data, key) => (
+              //   <ChatLine key={key} ownUser={data.value.from === user.uid}>
+              //     {data.value.from !== user.uid && (
+              //       <div className="name">{data.value.name}</div>
+              //     )}
+
+              //     <span
+              //       dangerouslySetInnerHTML={{
+              //         __html: clean(data.value.content, user.displayName),
+              //       }}
+              //     />
+
+              //     {/* <UrlPreview content={data.value.content} /> */}
+
+                //     <TimeFrom from={data.value.at} />
+                //   </ChatLine>
+                // ))
                 <LoaderContainer>
                   <CircularProgress />
                 </LoaderContainer>
