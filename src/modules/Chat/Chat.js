@@ -124,6 +124,7 @@ class Chat extends React.PureComponent<Props, State> {
     window.addEventListener('blur', () => {
       this.setState({ ignore: false });
     });
+
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.ready.then(swRegistration =>
         this.setState({ swRegistration })
