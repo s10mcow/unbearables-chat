@@ -51,9 +51,12 @@ export const ChatContainer = styled.ul`
   flex: 1;
   overflow-y: auto;
   flex-direction: column;
-  padding: 10px 5% 0;
   background-color: ${props => props.theme.colors.LIGHT_GREY};
   position: relative;
+
+  .List > div {
+    width: 90% !important;
+  }
 
   .messagesEnd {
     display: flex;
@@ -65,7 +68,6 @@ export const ChatLine = styled.li`
   position: relative;
   align-self: ${props => (props.ownUser ? 'flex-end' : 'flex-start')};
   padding: 6px 7px 8px 9px;
-  max-width: 400px;
   font-size: 16px;
   min-width: 140px;
   background-color: ${props =>

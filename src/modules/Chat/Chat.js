@@ -144,10 +144,10 @@ class Chat extends React.PureComponent<Props, State> {
           'center',
           this.props.chat.length - 1
         ) - scroll.scrollTop;
-      if (difference > 500 && !this.state.hasUserScrolled) {
+      if (difference > 100 && !this.state.hasUserScrolled) {
         return this.setState({ hasUserScrolled: true });
       }
-      if (difference <= 500 && this.state.hasUserScrolled) {
+      if (difference <= 100 && this.state.hasUserScrolled) {
         return this.setState({ hasUserScrolled: false });
       }
     }
@@ -211,7 +211,9 @@ class Chat extends React.PureComponent<Props, State> {
           columnIndex={0}
           rowIndex={index}
         >
-          <div style={Object.assign({}, style, { width: '100%' })}>
+          <div
+            style={Object.assign({}, style, { width: '100%', display: 'flex' })}
+          >
             <ChatLine
               ownUser={
                 this.props.chat[index].value.from === this.props.user.uid
