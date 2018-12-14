@@ -11,7 +11,7 @@ import Members from 'src/components/Members/Members';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import actions from 'src/store/chat/chat.action';
 import { withRouter } from 'react-router';
-import Notification from 'react-web-notification';
+import Notification from '../../components/Notification/Notification';
 import icon from 'assets/images/splash.png';
 import MicrolinkCard from 'react-microlink';
 import {
@@ -61,8 +61,6 @@ class UrlPreview extends React.PureComponent<UrlProps> {
     return getUrl(content) ? <MicrolinkCard url={getUrl(content)} /> : null;
   }
 }
-
-let tagId = 2;
 
 class Chat extends React.PureComponent<Props, State> {
   constructor(props) {
@@ -159,7 +157,6 @@ class Chat extends React.PureComponent<Props, State> {
     this.scrollToBottom();
 
     if (prevProps.chat.length < this.props.chat.length) {
-      tagId = tagId === 1 ? 2 : 1;
       const options = {
         body: `${this.props.chat[this.props.chat.length - 1].value.name}: ${
           this.props.chat[this.props.chat.length - 1].value.content
@@ -168,7 +165,6 @@ class Chat extends React.PureComponent<Props, State> {
         vibrate: [100, 50, 100],
         icon,
         badge: icon,
-        tag: `unbearables${tagId}`,
         askAgain: true,
       };
 
