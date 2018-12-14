@@ -62,6 +62,8 @@ class UrlPreview extends React.PureComponent<UrlProps> {
   }
 }
 
+let tagId = 2;
+
 class Chat extends React.PureComponent<Props, State> {
   constructor(props) {
     super(props);
@@ -157,6 +159,7 @@ class Chat extends React.PureComponent<Props, State> {
     this.scrollToBottom();
 
     if (prevProps.chat.length < this.props.chat.length) {
+      tagId = tagId === 1 ? 2 : 1;
       const options = {
         body: `${this.props.chat[this.props.chat.length - 1].value.name}: ${
           this.props.chat[this.props.chat.length - 1].value.content
@@ -165,7 +168,8 @@ class Chat extends React.PureComponent<Props, State> {
         vibrate: [100, 50, 100],
         icon,
         badge: icon,
-        tag: 'unbearables',
+        tag: `unbearables${tagId}`,
+        askAgain: true,
       };
 
       this.setState({
