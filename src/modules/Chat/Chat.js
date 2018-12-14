@@ -52,7 +52,10 @@ type State = {
   swRegistration: any,
 };
 
-class UrlPreview extends React.PureComponent {
+type UrlProps = {
+  content: string,
+};
+class UrlPreview extends React.PureComponent<UrlProps> {
   render() {
     const { content } = this.props;
     return getUrl(content) ? <MicrolinkCard url={getUrl(content)} /> : null;
@@ -71,6 +74,8 @@ class Chat extends React.PureComponent<Props, State> {
     this.scroll = {};
   }
 
+  cache;
+  scroll;
   messagesEnd;
   List;
 
@@ -160,6 +165,7 @@ class Chat extends React.PureComponent<Props, State> {
         vibrate: [100, 50, 100],
         icon,
         badge: icon,
+        tag: 'unbearables',
       };
 
       this.setState({
@@ -269,23 +275,6 @@ class Chat extends React.PureComponent<Props, State> {
                   )}
                 </AutoSizer>
               ) : (
-              // chat.map((data, key) => (
-              //   <ChatLine key={key} ownUser={data.value.from === user.uid}>
-              //     {data.value.from !== user.uid && (
-              //       <div className="name">{data.value.name}</div>
-              //     )}
-
-              //     <span
-              //       dangerouslySetInnerHTML={{
-              //         __html: clean(data.value.content, user.displayName),
-              //       }}
-              //     />
-
-              //     {/* <UrlPreview content={data.value.content} /> */}
-
-                //     <TimeFrom from={data.value.at} />
-                //   </ChatLine>
-                // ))
                 <LoaderContainer>
                   <CircularProgress />
                 </LoaderContainer>
