@@ -1,6 +1,7 @@
 // @flow
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
+import createReduxPromiseListener from 'redux-promise-listener';
 
 import { toastr } from 'react-redux-toastr';
 import { applyMiddleware, createStore } from 'redux';
@@ -12,6 +13,8 @@ import SagaManager from './sagas';
 
 // MIDDLEWARES
 export const history = createBrowserHistory();
+const reduxPromiseListener = createReduxPromiseListener();
+
 const router = routerMiddleware(history);
 const sagaMiddleware = createSagaMiddleware({
   onError: error => {
@@ -38,10 +41,12 @@ export const store = createStore(
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
   applyMiddleware(
     sagaMiddleware,
-    router
+    router,
+    reduxPromiseListener.middleware
     // createRavenMiddleware(Raven)
   )
 );
+export const promiseListener = reduxPromiseListener;
 
 // SAGAS
 SagaManager.startSagas(sagaMiddleware);

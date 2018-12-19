@@ -20,6 +20,8 @@ import {
   CellMeasurer,
   CellMeasurerCache,
 } from 'react-virtualized';
+import MakeAsyncFunction from 'react-redux-promise-listener';
+import { promiseListener } from '../../store/store';
 
 import {
   LogoutMenu,
@@ -150,6 +152,10 @@ class Chat extends React.PureComponent<Props, State> {
       if (difference <= 100 && this.state.hasUserScrolled) {
         return this.setState({ hasUserScrolled: false });
       }
+      if (scroll.scrollTop < 100) {
+        this.props.loadMoreMessages();
+        this.List.current.scrollToRow(20);
+      }
     }
   };
 
@@ -241,6 +247,7 @@ class Chat extends React.PureComponent<Props, State> {
       )
     );
   };
+  isRowLoaded = ({ index }) => index < this.props.chat.length;
 
   render() {
     const { chat } = this.props;
@@ -260,22 +267,40 @@ class Chat extends React.PureComponent<Props, State> {
             </Header>
             <ChatContainer>
               {chat.length ? (
-                <AutoSizer>
-                  {({ width, height }) => (
-                    <List
-                      ref={this.List}
-                      className="List"
-                      rowRenderer={this.chatItem}
-                      rowCount={chat.length}
-                      width={width}
-                      height={height}
-                      deferredMeasurementCache={this.cache}
-                      rowHeight={this.cache.rowHeight}
-                      overscanRowCount={3}
-                      onScroll={this.watchScroll}
-                    />
+                <MakeAsyncFunction
+                  listener={promiseListener}
+                  start="CHAT_LOAD_MORE_MESSAGES"
+                  resolve="CHAT_LOAD_MORE_MESSAGES_SUCCESS"
+                  reject="CHAT_LOAD_MORE_MESSAGES_FAILURE"
+                >
+                  {asyncFunction => (
+                    // <InfiniteLoader
+                    //   isRowLoaded={this.isRowLoaded}
+                    //   loadMoreRows={}
+                    //   rowCount={99999}
+                    // >
+                    //   {({ onRowsRendered, registerChild }) => (
+                    <AutoSizer>
+                      {({ width, height }) => (
+                        <List
+                          ref={this.List}
+                          className="List"
+                          rowRenderer={this.chatItem}
+                          rowCount={chat.length}
+                          width={width}
+                          height={height}
+                          deferredMeasurementCache={this.cache}
+                          rowHeight={this.cache.rowHeight}
+                          overscanRowCount={3}
+                          onScroll={this.watchScroll}
+                          // onRowsRendered={onRowsRendered}
+                        />
+                      )}
+                    </AutoSizer>
                   )}
-                </AutoSizer>
+                  {/* </InfiniteLoader>
+                  )} */}
+                </MakeAsyncFunction>
               ) : (
                 <LoaderContainer>
                   <CircularProgress />
@@ -322,6 +347,7 @@ const mapDispatchToProps = dispatch =>
     {
       logout: () => userActions.userLogout(),
       sendMessage: message => actions.chatSendMessage(message),
+      loadMoreMessages: () => actions.chatLoadMoreMessages(),
     },
     dispatch
   );

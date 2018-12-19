@@ -4,13 +4,19 @@ import type { Saga } from 'redux-saga';
 import { buffers, eventChannel } from 'redux-saga';
 import rsf from '../rsf';
 import firebase from 'firebase';
-import { CHAT_INIT, CHAT_SEND_MESSAGE, CHAT_LOGOUT } from './chat.action';
+import {
+  CHAT_INIT,
+  CHAT_SEND_MESSAGE,
+  CHAT_LOGOUT,
+  CHAT_LOAD_MORE_MESSAGES,
+} from './chat.action';
 import actions from './chat.action';
 import userActions from '../user/user.action';
 import { getUserData } from '../user/user.reducer';
 import { reset } from 'redux-form';
 import { push } from 'connected-react-router';
 import { AppIsReadOnly } from '../app/app.reducer';
+import { getMessages } from '../chat/chat.reducer';
 
 //export const contentPath = 'live-chat/content/';
 //export const memberPath = 'live-chat/members/';
@@ -187,6 +193,32 @@ function* chatLogout() {
   }
 }
 
+function* chatLoadMoreMessages() {
+  try {
+    const messages = yield select(getMessages);
+    const oldestMessage = messages[0].snapshot.key;
+
+    const ref = rsf.app
+      .database()
+      .ref(contentPath)
+      .orderByKey()
+      .endAt(oldestMessage)
+      .limitToLast(20);
+
+    const snapshot = yield call([ref, ref.once], 'value');
+    let newMessages = [];
+    snapshot.forEach(function(childSnapshot) {
+      newMessages = newMessages.concat([
+        { snapshot: childSnapshot, value: childSnapshot.val() },
+      ]);
+    });
+
+    yield put(actions.chatLoadMoreMessagesSuccess(newMessages));
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 export function* watchChatLogout(): Saga<void> {
   yield takeLatest(CHAT_LOGOUT, chatLogout);
 }
@@ -199,4 +231,13 @@ export function* watchChatInit(): Saga<void> {
   yield takeLatest(CHAT_INIT, chatInit);
 }
 
-export default [watchChatInit, watchSendMessage, watchChatLogout];
+export function* watchChatLoadMoreMessages(): Saga<void> {
+  yield takeLatest(CHAT_LOAD_MORE_MESSAGES, chatLoadMoreMessages);
+}
+
+export default [
+  watchChatInit,
+  watchSendMessage,
+  watchChatLogout,
+  watchChatLoadMoreMessages,
+];

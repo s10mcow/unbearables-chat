@@ -10,6 +10,9 @@ export const CHAT_CONTENT_REMOVE = 'CHAT_CONTENT_REMOVE';
 export const CHAT_CONTENT_MODIFIED = 'CHAT_CONTENT_MODIFIED';
 export const CHAT_LOGOUT = 'CHAT_LOGOUT';
 export const CHAT_RESET = 'CHAT_RESET';
+export const CHAT_LOAD_MORE_MESSAGES = 'CHAT_LOAD_MORE_MESSAGES';
+export const CHAT_LOAD_MORE_MESSAGES_SUCCESS =
+  'CHAT_LOAD_MORE_MESSAGES_SUCCESS';
 
 const initialize = () => ({
   type: CHAT_INIT,
@@ -58,6 +61,15 @@ const chatReset = () => ({
   type: CHAT_RESET,
 });
 
+const chatLoadMoreMessages = () => ({
+  type: CHAT_LOAD_MORE_MESSAGES,
+});
+
+const chatLoadMoreMessagesSuccess = messages => ({
+  type: CHAT_LOAD_MORE_MESSAGES_SUCCESS,
+  messages,
+});
+
 const chat = {
   initialize,
   chatMembersUpdate,
@@ -67,6 +79,8 @@ const chat = {
   chatLogout,
   chatSendMessage,
   chatReset,
+  chatLoadMoreMessages,
+  chatLoadMoreMessagesSuccess,
 };
 
 export default chat;

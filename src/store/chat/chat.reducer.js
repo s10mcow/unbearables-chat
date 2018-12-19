@@ -6,6 +6,7 @@ import {
   CHAT_CONTENT_UPDATE,
   CHAT_MEMBER_REMOVE,
   CHAT_RESET,
+  CHAT_LOAD_MORE_MESSAGES_SUCCESS,
   type AnyChatActionType,
 } from './chat.action';
 
@@ -14,12 +15,13 @@ const initialState: ChatStateType = {
   members: [],
 };
 
-const findUpdateMember = (members, data) => members.map(member => {
-  if (data.value.name === member.value.name) {
-    member = Object.assign({}, data);
-  }
-  return member;
-});
+const findUpdateMember = (members, data) =>
+  members.map(member => {
+    if (data.value.name === member.value.name) {
+      member = Object.assign({}, data);
+    }
+    return member;
+  });
 
 const organizeMembers = (members: Array<any>) =>
   members.sort((a, b) => {
@@ -68,9 +70,17 @@ const chatReducer = (
         ...initialState,
       };
 
+    case CHAT_LOAD_MORE_MESSAGES_SUCCESS:
+      return {
+        ...state,
+        content: action.messages.concat(state.content),
+      };
+
     default:
       return state;
   }
 };
 
 export default chatReducer;
+
+export const getMessages = state => state.chat && state.chat.content;
