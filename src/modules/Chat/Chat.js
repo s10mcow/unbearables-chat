@@ -155,6 +155,8 @@ class Chat extends React.PureComponent<Props, State> {
       if (scroll.scrollTop < 100) {
         this.props.loadMoreMessages();
         this.List.current.scrollToRow(20);
+        this.cache.clearAll();
+        this.List.current.recomputeRowHeights();
       }
     }
   };
