@@ -6,6 +6,7 @@ import actions, {
   APP_INIT,
   APP_RESEND_VERIFY,
   APP_RESET_VERIFICATION,
+  APP_REFRESH_VERIFY,
 } from './app.action';
 import chatActions from '../chat/chat.action';
 import userActions from '../user/user.action';
@@ -50,6 +51,14 @@ function* appResetVerification() {
   yield put(actions.appReadOnly());
 }
 
+function appRefresh() {
+  window.location.reload();
+}
+
+function* appRefreshListener(): Saga<void> {
+  yield takeLatest(APP_REFRESH_VERIFY, appRefresh);
+}
+
 export function* appInitListener(): Saga<void> {
   yield takeLatest(APP_INIT, appInitWorker);
 }
@@ -66,4 +75,5 @@ export default [
   appInitListener,
   appResendVerifyListener,
   appResetVerificationListener,
+  appRefreshListener,
 ];

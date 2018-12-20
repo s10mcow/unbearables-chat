@@ -28,6 +28,7 @@ class VerifyEmailModal extends React.PureComponent {
       resetVerification,
       isUserLoggedIn,
       isReadOnly,
+      refresh,
     } = this.props;
 
     return isUserLoggedIn && !isReadOnly ? (
@@ -48,14 +49,14 @@ class VerifyEmailModal extends React.PureComponent {
             >
               Resend Verification
             </Button>
-            {/* <Button
+            <Button
               variant="contained"
               onClick={refresh}
-              color="error"
+              color="default"
               autoFocus
             >
               I Did
-            </Button> */}
+            </Button>
           </DialogActions>
         </Dialog>
 

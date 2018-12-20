@@ -61,6 +61,7 @@ function* userSignup({ username, email, password }): Saga<void> {
       email,
       password
     );
+    yield call(rsf.auth.sendEmailVerification);
     yield call([data.user, data.user.updateProfile], {
       displayName: username,
     });
