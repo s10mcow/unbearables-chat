@@ -7,6 +7,8 @@ import {
   USER_SIGNUP_STARTED,
   type AnyUserActionType,
   USER_UPDATE,
+  USER_LOGIN_FAILURE,
+  USER_SIGNUP_FAILURE,
 } from './user.action';
 
 const initialState: UserStateType = {
@@ -41,10 +43,23 @@ const userReducer = (
         isSigningUp: false,
       };
 
+    case USER_LOGIN_FAILURE:
+      return {
+        ...state,
+        isLoggingIn: false,
+        isSigningUp: false,
+      };
+
     case USER_SIGNUP_STARTED:
       return {
         ...state,
         isSigningUp: true,
+      };
+
+    case USER_SIGNUP_FAILURE:
+      return {
+        ...state,
+        isSigningUp: false,
       };
 
     case USER_UPDATE:

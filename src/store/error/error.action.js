@@ -10,9 +10,9 @@ const errorLoginFailure = (message: string) => ({
   message,
 });
 
-const errorSignupFailure = (message: string) => ({
+const errorSignupFailure = (error: any) => ({
   type: ERROR_SIGNUP_FAILURE,
-  message,
+  error,
 });
 
 const resetErrors = () => ({

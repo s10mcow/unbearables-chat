@@ -20,8 +20,6 @@ import {
   CellMeasurer,
   CellMeasurerCache,
 } from 'react-virtualized';
-import MakeAsyncFunction from 'react-redux-promise-listener';
-import { promiseListener } from '../../store/store';
 
 import {
   LogoutMenu,
@@ -164,7 +162,11 @@ class Chat extends React.PureComponent<Props, State> {
   componentDidUpdate(prevProps) {
     this.scrollToBottom();
 
-    if (prevProps.chat.length < this.props.chat.length) {
+    if (
+      prevProps.chat.length < this.props.chat.length &&
+      this.props.chat[this.props.chat.length - 1].value.from !==
+        this.props.user.uid
+    ) {
       const options = {
         body: `${this.props.chat[this.props.chat.length - 1].value.name}: ${
           this.props.chat[this.props.chat.length - 1].value.content
@@ -269,40 +271,22 @@ class Chat extends React.PureComponent<Props, State> {
             </Header>
             <ChatContainer>
               {chat.length ? (
-                <MakeAsyncFunction
-                  listener={promiseListener}
-                  start="CHAT_LOAD_MORE_MESSAGES"
-                  resolve="CHAT_LOAD_MORE_MESSAGES_SUCCESS"
-                  reject="CHAT_LOAD_MORE_MESSAGES_FAILURE"
-                >
-                  {asyncFunction => (
-                    // <InfiniteLoader
-                    //   isRowLoaded={this.isRowLoaded}
-                    //   loadMoreRows={}
-                    //   rowCount={99999}
-                    // >
-                    //   {({ onRowsRendered, registerChild }) => (
-                    <AutoSizer>
-                      {({ width, height }) => (
-                        <List
-                          ref={this.List}
-                          className="List"
-                          rowRenderer={this.chatItem}
-                          rowCount={chat.length}
-                          width={width}
-                          height={height}
-                          deferredMeasurementCache={this.cache}
-                          rowHeight={this.cache.rowHeight}
-                          overscanRowCount={3}
-                          onScroll={this.watchScroll}
-                          // onRowsRendered={onRowsRendered}
-                        />
-                      )}
-                    </AutoSizer>
+                <AutoSizer>
+                  {({ width, height }) => (
+                    <List
+                      ref={this.List}
+                      className="List"
+                      rowRenderer={this.chatItem}
+                      rowCount={chat.length}
+                      width={width}
+                      height={height}
+                      deferredMeasurementCache={this.cache}
+                      rowHeight={this.cache.rowHeight}
+                      overscanRowCount={3}
+                      onScroll={this.watchScroll}
+                    />
                   )}
-                  {/* </InfiniteLoader>
-                  )} */}
-                </MakeAsyncFunction>
+                </AutoSizer>
               ) : (
                 <LoaderContainer>
                   <CircularProgress />

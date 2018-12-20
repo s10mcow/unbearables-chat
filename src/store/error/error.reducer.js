@@ -14,6 +14,25 @@ const initialState: ErrorStateType = {
   resetPasswordError: '',
 };
 
+const mapMessage = key => {
+  switch (key) {
+    case 'EMAIL_EXISTS': {
+      return 'Email already has been used, try another one...';
+    }
+    default:
+      return 'Something seems to have gone wrong';
+  }
+};
+
+const getMessage = ({ error }) => {
+  if (error.message) {
+    return error.message;
+  }
+  error && error.errors && error.errors.length
+    ? mapMessage(error.errors[0].message)
+    : mapMessage(null);
+};
+
 const errorReducer = (
   state: ErrorStateType = initialState,
   action: AnyErrorActionType
@@ -27,7 +46,7 @@ const errorReducer = (
     case ERROR_SIGNUP_FAILURE:
       return {
         ...initialState,
-        signupError: action.message,
+        signupError: getMessage(action),
       };
     case ERROR_RESET:
       return {

@@ -29,9 +29,9 @@ class Routes extends React.PureComponent<Props, null> {
     return (
       <React.Fragment>
         <Switch>
-          <Route path="/login" component={Login} />
-          <Route path="/" component={Chat} />
-          <Route path="/resetpassword" component={ResetPassword} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/" component={Chat} />
+          <Route exact path="/resetpassword" component={ResetPassword} />
 
           <Redirect to="/login" />
         </Switch>

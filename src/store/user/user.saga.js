@@ -46,6 +46,7 @@ function* userLogin({ email, password }): Saga<void> {
     yield put(chatActions.initialize());
     yield put(push('/'));
   } catch (error) {
+    yield put(actions.userLoginFailure(error));
     yield put(
       errorActions.errorLoginFailure('Username or password is incorrect.')
     );
@@ -67,9 +68,8 @@ function* userSignup({ username, email, password }): Saga<void> {
     yield put(chatActions.initialize());
     yield put(push('/'));
   } catch (error) {
-    yield put(
-      errorActions.errorSignupFailure('Something seems to have gone wrong...')
-    );
+    yield put(actions.userSignupFailure());
+    yield put(errorActions.errorSignupFailure(error));
   }
 }
 

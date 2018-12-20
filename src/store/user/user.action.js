@@ -54,9 +54,8 @@ const userLogoutSuccess = () => ({
   type: USER_LOGOUT_SUCCESS,
 });
 
-const userSignupFailure = (error: { message: string }) => ({
+const userSignupFailure = () => ({
   type: USER_SIGNUP_FAILURE,
-  error,
 });
 
 const userUpdateInfo = (username: string) => ({
