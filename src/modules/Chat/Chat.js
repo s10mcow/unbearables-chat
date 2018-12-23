@@ -14,6 +14,7 @@ import { withRouter } from 'react-router';
 import Notification from '../../components/Notification/Notification';
 import icon from 'assets/images/splash.png';
 import MicrolinkCard from 'react-microlink';
+
 import {
   AutoSizer,
   List,
@@ -89,6 +90,10 @@ class Chat extends React.PureComponent<Props, State> {
 
   logout = () => {
     this.props.logout();
+  };
+
+  faq = () => {
+    this.props.history.push('/faq');
   };
 
   scrollToBottom = () => {
@@ -257,73 +262,75 @@ class Chat extends React.PureComponent<Props, State> {
     const { chat } = this.props;
 
     return (
-      <OuterWrapper>
-        <Helmet>
-          <title>Unbearables</title>
-          <meta name="Chat" content="Chat" />
-        </Helmet>
-        <Container>
-          <Members />
-          <Wrapper>
-            <Header>
-              <span />
-              <LogoutMenu logout={this.logout} />
-            </Header>
-            <ChatContainer>
-              {chat.length ? (
-                <AutoSizer>
-                  {({ width, height }) => (
-                    <List
-                      ref={this.List}
-                      className="List"
-                      rowRenderer={this.chatItem}
-                      rowCount={chat.length}
-                      width={width}
-                      height={height}
-                      deferredMeasurementCache={this.cache}
-                      rowHeight={this.cache.rowHeight}
-                      overscanRowCount={3}
-                      onScroll={this.watchScroll}
-                    />
-                  )}
-                </AutoSizer>
-              ) : (
-                <LoaderContainer>
-                  <CircularProgress />
-                </LoaderContainer>
-              )}
-              <div className="messagesEnd" name="messagesEnd" />
-            </ChatContainer>
+      <React.Fragment>
+        <OuterWrapper>
+          <Helmet>
+            <title>Unbearables</title>
+            <meta name="Chat" content="Chat" />
+          </Helmet>
+          <Container>
+            <Members />
+            <Wrapper>
+              <Header>
+                <span />
+                <LogoutMenu logout={this.logout} faq={this.faq} />
+              </Header>
+              <ChatContainer>
+                {chat.length ? (
+                  <AutoSizer>
+                    {({ width, height }) => (
+                      <List
+                        ref={this.List}
+                        className="List"
+                        rowRenderer={this.chatItem}
+                        rowCount={chat.length}
+                        width={width}
+                        height={height}
+                        deferredMeasurementCache={this.cache}
+                        rowHeight={this.cache.rowHeight}
+                        overscanRowCount={3}
+                        onScroll={this.watchScroll}
+                      />
+                    )}
+                  </AutoSizer>
+                ) : (
+                  <LoaderContainer>
+                    <CircularProgress />
+                  </LoaderContainer>
+                )}
+                <div className="messagesEnd" name="messagesEnd" />
+              </ChatContainer>
 
-            <ScrollBottomButton
-              onClick={this.forceScrollToBottom}
-              className={this.state.hasUserScrolled ? 'active' : ''}
-            >
-              <svg
-                id="Layer_1"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 21 21"
-                width="21"
-                height="21"
+              <ScrollBottomButton
+                onClick={this.forceScrollToBottom}
+                className={this.state.hasUserScrolled ? 'active' : ''}
               >
-                <path
-                  fill="#263238"
-                  fillOpacity=".33"
-                  d="M4.8 6.1l5.7 5.7 5.7-5.7 1.6 1.6-7.3 7.2-7.3-7.2 1.6-1.6z"
-                />
-              </svg>
-            </ScrollBottomButton>
+                <svg
+                  id="Layer_1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 21 21"
+                  width="21"
+                  height="21"
+                >
+                  <path
+                    fill="#263238"
+                    fillOpacity=".33"
+                    d="M4.8 6.1l5.7 5.7 5.7-5.7 1.6 1.6-7.3 7.2-7.3-7.2 1.6-1.6z"
+                  />
+                </svg>
+              </ScrollBottomButton>
 
-            <ChatInputForm onSubmit={this.sendMessage} />
-          </Wrapper>
-        </Container>
-        <Notification
-          title={this.state.title}
-          options={this.state.options}
-          ignore={this.state.ignore}
-          swRegistration={this.state.swRegistration}
-        />
-      </OuterWrapper>
+              <ChatInputForm onSubmit={this.sendMessage} />
+            </Wrapper>
+          </Container>
+          <Notification
+            title={this.state.title}
+            options={this.state.options}
+            ignore={this.state.ignore}
+            swRegistration={this.state.swRegistration}
+          />
+        </OuterWrapper>
+      </React.Fragment>
     );
   }
 }

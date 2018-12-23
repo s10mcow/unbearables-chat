@@ -21,6 +21,9 @@ type OwnProps = {
   userSignup: Function,
   user: UserObjectType,
   error: ErrorStateType,
+  isLoggingIn: boolean,
+  isSigningUp: boolean,
+  history: Function,
 };
 
 type State = {

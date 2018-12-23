@@ -10,7 +10,11 @@ import breakpoint from 'styled-components-breakpoint';
 import distanceInWords from 'date-fns/distance_in_words';
 import isWithinRange from 'date-fns/is_within_range';
 
-export const LogoutMenu = (props: { onClick: ?Function, logout: Function }) => (
+export const LogoutMenu = (props: {
+  onClick: ?Function,
+  logout: Function,
+  faq: Function,
+}) => (
   <Menu
     MenuLabel={props => (
       <IconButton onClick={props.onClick}>
@@ -18,6 +22,7 @@ export const LogoutMenu = (props: { onClick: ?Function, logout: Function }) => (
       </IconButton>
     )}
   >
+    <MenuItem onClick={props.faq}>Faq</MenuItem>
     <MenuItem onClick={props.logout}>Logout</MenuItem>
   </Menu>
 );
