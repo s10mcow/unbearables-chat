@@ -46,7 +46,7 @@ function channel(pathOrRef, event, action, limit) {
 function* chatInit(): Saga<void> {
   try {
     const user = yield select(getUserData);
-    const userPath = memberPath + user.uid; //`${memberPath}${user.uid}`;
+    const userPath = `${memberPath}${user.uid}`;
     const ref = rsf.app.database().ref(userPath);
     const disconnect = ref.onDisconnect();
     yield call([disconnect, disconnect.set], null);

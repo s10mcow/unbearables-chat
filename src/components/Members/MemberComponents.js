@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import breakpoint from 'styled-components-breakpoint';
-import avatarImage from 'assets/images/logo.jpg';
 import Avatar from '@material-ui/core/Avatar';
 import distanceInWords from 'date-fns/distance_in_words';
 import isWithinRange from 'date-fns/is_within_range';
@@ -138,7 +137,11 @@ export class Member extends React.PureComponent {
     const { data, memberPanelOpen } = this.props;
     return (
       <StyledMember {...this.props}>
-        <Avatar className="Avatar" src={avatarImage} />
+        {data && data.photoUrl ? (
+          <Avatar className="Avatar" src={data.photoUrl} />
+        ) : (
+          <Avatar className="Avatar">{data.name[0].toUpperCase()}</Avatar>
+        )}
         <span>{data.name}</span>
         <NotificationColor
           lastSeen={data.lastSeen || data.at}

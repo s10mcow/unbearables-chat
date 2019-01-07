@@ -114,7 +114,11 @@ class Bearatar extends React.PureComponent<Props> {
     return (
       <Wrapper {...this.props}>
         <IconButton className="AvatarButton" onClick={openProfile}>
-          <Avatar className="Avatar" src={avatarImage} />
+          {user && user.photoUrl ? (
+            <Avatar className="Avatar" src={avatarImage} />
+          ) : (
+            <Avatar className="Avatar">H</Avatar>
+          )}{' '}
         </IconButton>
         <IconButton onClick={toggleMemberPanel} className="MemberPanelButton">
           {memberPanelOpen ? <MdClose /> : <MdMenu />}
@@ -131,7 +135,11 @@ class Bearatar extends React.PureComponent<Props> {
             {type}
           </header>
           <main>
-            <Avatar className="Avatar" src={avatarImage} />
+            {user && user.photoUrl ? (
+              <Avatar className="Avatar" src={avatarImage} />
+            ) : (
+              <Avatar className="Avatar">H</Avatar>
+            )}
             {type === 'Profile' && (
               <UserEditForm user={user} onSubmit={this.userUpdateInfo} />
             )}

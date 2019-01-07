@@ -41,6 +41,7 @@ function* userLogin({ email, password }): Saga<void> {
       email,
       password
     );
+
     yield put(actions.userLoginSuccess(user));
     yield put(appActions.setAppStatusInitialized(user.emailVerified));
     yield put(chatActions.initialize());
