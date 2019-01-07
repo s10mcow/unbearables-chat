@@ -120,6 +120,7 @@ function* userUpdateLastSeen() {
     const ref = rsf.app.database().ref(userPath);
     const rosterUpdate = {
       name: user.displayName,
+      photoURL: user.photoURL,
       lastSeen: firebase.database.ServerValue.TIMESTAMP,
     };
     yield call([ref, ref.update], rosterUpdate);

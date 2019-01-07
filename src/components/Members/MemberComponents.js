@@ -137,8 +137,8 @@ export class Member extends React.PureComponent {
     const { data, memberPanelOpen } = this.props;
     return (
       <StyledMember {...this.props}>
-        {data && data.photoUrl ? (
-          <Avatar className="Avatar" src={data.photoUrl} />
+        {data && data.photoURL ? (
+          <Avatar className="Avatar" src={data.photoURL} />
         ) : (
           <Avatar className="Avatar">{data.name[0].toUpperCase()}</Avatar>
         )}

@@ -25,7 +25,7 @@ const initialState: UserStateType = {
 };
 
 const getUserUpdate = (user, state) =>
-  Object.assign(state.user, { photoURL: user.photoURL });
+  Object.assign(state.user, { photoURL: user && user.photoURL });
 
 const userReducer = (
   state: UserStateType = initialState,
