@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { MdClose, MdMenu, MdArrowBack } from 'react-icons/md';
 import IconButton from '@material-ui/core/IconButton';
 import Avatar from '@material-ui/core/Avatar';
-import avatarImage from 'assets/images/logo.jpg';
 import { type UserObjectType } from 'src/types';
 import UserEditForm from './UserEditForm';
 import { bindActionCreators } from 'redux';
@@ -96,10 +95,23 @@ type Props = {
 };
 
 class Bearatar extends React.PureComponent<Props> {
+  inputOpenFileRef = React.createRef();
+
   userUpdateInfo = ({ username }) => {
     if (username !== this.props.user.displayName) {
       this.props.userUpdateInfo(username);
     }
+  };
+
+  uploadImage = () => {
+    this.inputOpenFileRef.current.click();
+  };
+
+  onChangeFile = event => {
+    event.stopPropagation();
+    event.preventDefault();
+    const file = event.target.files[0];
+    this.props.userUpdateProfile(file);
   };
   render() {
     const {
@@ -114,10 +126,12 @@ class Bearatar extends React.PureComponent<Props> {
     return (
       <Wrapper {...this.props}>
         <IconButton className="AvatarButton" onClick={openProfile}>
-          {user && user.photoUrl ? (
-            <Avatar className="Avatar" src={avatarImage} />
+          {user && user.photoURL ? (
+            <Avatar className="Avatar" src={user.photoURL} />
           ) : (
-            <Avatar className="Avatar">H</Avatar>
+            <Avatar className="Avatar">
+              {user && user.name && user.name[0].toUpperCase()}
+            </Avatar>
           )}{' '}
         </IconButton>
         <IconButton onClick={toggleMemberPanel} className="MemberPanelButton">
@@ -135,10 +149,19 @@ class Bearatar extends React.PureComponent<Props> {
             {type}
           </header>
           <main>
-            {user && user.photoUrl ? (
-              <Avatar className="Avatar" src={avatarImage} />
+            <input
+              ref={this.inputOpenFileRef}
+              type="file"
+              style={{ display: 'none' }}
+              onChange={this.onChangeFile}
+            />
+
+            {user && user.photoURL ? (
+              <Avatar className="Avatar" src={user.photoURL} />
             ) : (
-              <Avatar className="Avatar">H</Avatar>
+              <Avatar className="Avatar" onClick={this.uploadImage}>
+                {user && user.name && user.name[0].toUpperCase()}
+              </Avatar>
             )}
             {type === 'Profile' && (
               <UserEditForm user={user} onSubmit={this.userUpdateInfo} />
@@ -163,6 +186,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       userUpdateInfo: username => actions.userUpdateInfo(username),
+      userUpdateProfile: file => actions.userUpdateProfile(file),
     },
     dispatch
   );

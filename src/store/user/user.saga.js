@@ -13,6 +13,7 @@ import {
   USER_UPDATE_LAST_SEEN,
   USER_START_SYNC,
   USER_RESET_PASSWORD,
+  USER_UPDATE_PROFILE,
 } from './user.action';
 import actions from './user.action';
 import chatActions from '../chat/chat.action';
@@ -140,6 +141,22 @@ function* userResetPassword({ email }) {
   }
 }
 
+function* userUpdateProfile({ photo }) {
+  try {
+    const storageRef = `/avatar/${photo.name}`;
+    const { ref } = yield call(rsf.storage.uploadFile, storageRef, photo);
+    const photoURL = yield call(rsf.storage.getDownloadURL, ref);
+    const userData = { photoURL };
+    yield call(rsf.auth.updateProfile, userData);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export function* watchUserUpdateProfile(): Saga<void> {
+  yield takeLatest(USER_UPDATE_PROFILE, userUpdateProfile);
+}
+
 export function* watchUserUpdateLastSeen(): Saga<void> {
   yield takeLatest(USER_UPDATE_LAST_SEEN, userUpdateLastSeen);
 }
@@ -176,4 +193,5 @@ export default [
   watchUserUpdateLastSeen,
   watchUserResetPassword,
   watchUserStartSync,
+  watchUserUpdateProfile,
 ];

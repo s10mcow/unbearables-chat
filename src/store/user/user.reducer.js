@@ -18,12 +18,14 @@ const initialState: UserStateType = {
     firstSeen: null,
     lastSeen: null,
     email: '',
+    photoURL: null,
   },
   isLoggingIn: false,
   isSigningUp: false,
 };
 
-const getUserUpdate = (user, state) => state.user;
+const getUserUpdate = (user, state) =>
+  Object.assign(state.user, { photoURL: user.photoURL });
 
 const userReducer = (
   state: UserStateType = initialState,

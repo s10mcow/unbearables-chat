@@ -14,6 +14,12 @@ export const USER_SIGNUP_STARTED = 'USER_SIGNUP_STARTED';
 export const USER_UPDATE = 'USER_UPDATE';
 export const USER_START_SYNC = 'USER_START_SYNC';
 export const USER_RESET_PASSWORD = 'USER_RESET_PASSWORD';
+export const USER_UPDATE_PROFILE = 'USER_UPDATE_PROFILE';
+
+const userUpdateProfile = (photo: string) => ({
+  type: USER_UPDATE_PROFILE,
+  photo,
+});
 
 const userLogin = (email: string, password: string) => ({
   type: USER_LOGIN,
@@ -96,6 +102,7 @@ const user = {
   userUpdate,
   userStartSync,
   userResetPassword,
+  userUpdateProfile,
 };
 
 export default user;
