@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const FaqWrapper = styled.article`
   display: flex;
@@ -40,6 +41,7 @@ export default class Faq extends React.PureComponent {
   render() {
     return (
       <FaqWrapper>
+        <Link to="/">Back to Chat</Link>
         <h1>FAQs and more</h1>
         <FaqSection>
           <h2>FAQs</h2>
@@ -64,8 +66,11 @@ export default class Faq extends React.PureComponent {
           <dt className="lead">Can you do ______? </dt>
           <dt className="">
             - Probably, if it's in the <a href="#features">Planned Feature</a>{' '}
-            list, we're going to. If not, email your suggestion to
-            unbearables.dev@gmail.com!
+            list, we're going to. If not, email your suggestion to{' '}
+            <a href="mailto:unbearables.dev@gmail.com">
+              unbearables.dev@gmail.com
+            </a>
+            !
           </dt>
           <dt className="lead">I'd love to help! What can I do? </dt>
           <dt className="">
